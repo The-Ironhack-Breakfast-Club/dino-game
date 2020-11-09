@@ -8,20 +8,8 @@ const bgImg = new Image()
 bgImg.src = '../images/BG/BG.png'
 
 const dinoIdle = new Image()
-dinoIdle.src = `../images/dino-sprites/idle-right/Idle (1).png`
+dinoIdle.src = ``
 i = 1
-setInterval(function () {
-
-    console.log(dino.jumping, dino.walking, dino.idling)
-    dinoIdle.src = `../images/dino-sprites/idle-right/Idle (${i}).png`
-    if (i < 10) {
-        i++
-    } else {
-        i = 1
-    }
-}, 75)
-
-
 
 let bg = { x: 0, y: 0, w: canvas.width, h: canvas.height }
 
@@ -38,7 +26,7 @@ let dino = {
     idling: true,
     walking: false,
     dying: false,
-    direction: "right"
+    rightFacing: true
 }
 
 let keys = [];
@@ -55,6 +43,27 @@ boxes.push({
     h: 5
 });
 
+setInterval(function () {
+    if (dino.idling && dino.rightFacing) {
+
+        console.log(dino.jumping, dino.walking, dino.idling, dino.rightFacing)
+        dinoIdle.src = `../images/dino-sprites/idle-right/Idle (${i}).png`
+        if (i < 10) {
+            i++
+        } else {
+            i = 1
+        }
+    } else if (dino.idling && !dino.rightFacing) {
+        console.log(dino.jumping, dino.walking, dino.idling, dino.rightFacing)
+        dinoIdle.src = `../images/dino-sprites/idle-left/Idle (${i}).png`
+        if (i < 10) {
+            i++
+        } else {
+            i = 1
+        }
+    }
+}, 75)
+
 function update() {
     // check keys
     if (keys[38] || keys[32]) {
@@ -62,6 +71,7 @@ function update() {
         if (!dino.jumping && dino.grounded) {
             dino.jumping = true;
             dino.grounded = false;
+            dino.idling = false;
             dino.velY = -dino.speed * 2;
         }
     }
@@ -70,12 +80,14 @@ function update() {
         if (dino.velX < dino.speed) {
             dino.velX++;
         }
+        dino.rightFacing = true;
     }
     if (keys[37]) {
         // left arrow
         if (dino.velX > -dino.speed) {
             dino.velX--;
         }
+        dino.rightFacing = false;
     }
 
     dino.velX *= friction;
