@@ -5,7 +5,7 @@ canvas.width = window.innerWidth * .97
 canvas.height = canvas.width * .6
 
 const bgImg = new Image()
-bgImg.src = '../images/BG/BG.png'
+bgImg.src = './images/BG/BG.png'
 
 const dinoIdle = new Image()
 dinoIdle.src = ``
@@ -47,7 +47,7 @@ setInterval(function () {
     if (dino.idling && dino.rightFacing) {
 
         console.log(dino.jumping, dino.walking, dino.idling, dino.rightFacing)
-        dinoIdle.src = `../images/dino-sprites/idle-right/Idle (${i}).png`
+        dinoIdle.src = `./images/dino-sprites/idle-right/Idle (${i}).png`
         if (i < 10) {
             i++
         } else {
@@ -55,7 +55,7 @@ setInterval(function () {
         }
     } else if (dino.idling && !dino.rightFacing) {
         console.log(dino.jumping, dino.walking, dino.idling, dino.rightFacing)
-        dinoIdle.src = `../images/dino-sprites/idle-left/Idle (${i}).png`
+        dinoIdle.src = `./images/dino-sprites/idle-left/Idle (${i}).png`
         if (i < 10) {
             i++
         } else {
