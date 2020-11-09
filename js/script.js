@@ -8,16 +8,19 @@ const bgImg = new Image()
 bgImg.src = './images/BG/BG.png'
 
 const dinoImg = new Image()
-dinoImg.src = ``
+dinoImg.src = `./images/dino-sprites/spritesheet.png`
 
 
 let bg = { x: 0, y: 0, w: canvas.width, h: canvas.height }
 
 let dino = {
     x: 0,
-    y: canvas.height * .8,
-    w: canvas.width * .2,
-    h: canvas.height * .2,
+    y: 0,
+    w: 100,
+    h: 100,
+    // y: canvas.height * .8,
+    // w: canvas.width,
+    // h: canvas.height * .2,
     speed: 3,
     velX: 0,
     velY: 0,
@@ -26,7 +29,7 @@ let dino = {
     idling: true,
     running: false,
     dying: false,
-    rightFacing: true
+    // rightFacing: true
 }
 
 let dinoColPts = {
@@ -61,57 +64,71 @@ idleNum = 1;
 walkNum = 1;
 jumpNum = 1;
 
-setInterval(function () {
-    if (dino.jumping && dino.rightFacing) {
-        dinoImg.src = `./images/dino-sprites/jump-right/Jump (${jumpNum}).png`
-        if (jumpNum < 10) {
-            jumpNum++
-        } else {
-            jumpNum = 1
-        }
-        console.log(jumpNum)
-    } else if (dino.jumping && !dino.rightFacing) {
-        dinoImg.src = `./images/dino-sprites/jump-left/Jump (${jumpNum}).png`
 
-        if (jumpNum < 10) {
-            jumpNum++
-        } else {
-            jumpNum = 1
-        }
-    } else if (dino.idling && dino.rightFacing) {
-        dinoImg.src = `./images/dino-sprites/idle-right/Idle (${idleNum}).png`
-        if (idleNum < 10) {
-            idleNum++
-        } else {
-            idleNum = 1
-        }
-    } else if (dino.idling && !dino.rightFacing) {
-        dinoImg.src = `./images/dino-sprites/idle-left/Idle (${idleNum}).png`
-        if (idleNum < 10) {
-            idleNum++
-        } else {
-            idleNum = 1
-        }
-    } else if (dino.running && dino.rightFacing) {
-        dinoImg.src = `./images/dino-sprites/run-right/Run (${walkNum}).png`
-        if (walkNum < 8) {
-            walkNum++
-        } else {
-            walkNum = 1
-        }
-    } else if (dino.running && !dino.rightFacing) {
-        dinoImg.src = `./images/dino-sprites/run-left/Run (${walkNum}).png`
-        if (walkNum < 8) {
-            walkNum++
-        } else {
-            walkNum = 1
-        }
+
+
+
+
+
+
+// setInterval(function () {
+//     if (dino.jumping && dino.rightFacing) {
+//         dinoImg.src = `./images/dino-sprites/jump-right/Jump (${jumpNum}).png`
+//         if (jumpNum < 10) {
+//             jumpNum++
+//         } else {
+//             jumpNum = 1
+//         }
+//         console.log(jumpNum)
+//     } else if (dino.jumping && !dino.rightFacing) {
+//         dinoImg.src = `./images/dino-sprites/jump-left/Jump (${jumpNum}).png`
+
+//         if (jumpNum < 10) {
+//             jumpNum++
+//         } else {
+//             jumpNum = 1
+//         }
+//     } else if (dino.idling && dino.rightFacing) {
+//         dinoImg.src = `./images/dino-sprites/idle-right/Idle (${idleNum}).png`
+//         if (idleNum < 10) {
+//             idleNum++
+//         } else {
+//             idleNum = 1
+//         }
+//     } else if (dino.idling && !dino.rightFacing) {
+//         dinoImg.src = `./images/dino-sprites/idle-left/Idle (${idleNum}).png`
+//         if (idleNum < 10) {
+//             idleNum++
+//         } else {
+//             idleNum = 1
+//         }
+//     } else if (dino.running && dino.rightFacing) {
+//         dinoImg.src = `./images/dino-sprites/run-right/Run (${walkNum}).png`
+//         if (walkNum < 8) {
+//             walkNum++
+//         } else {
+//             walkNum = 1
+//         }
+//     } else if (dino.running && !dino.rightFacing) {
+//         dinoImg.src = `./images/dino-sprites/run-left/Run (${walkNum}).png`
+//         if (walkNum < 8) {
+//             walkNum++
+//         } else {
+//             walkNum = 1
+//         }
+//     }
+// }, 75)
+
+function changeAction(newAction) {
+    if (action != newAction) {
+        action = newAction;
+        x = stages[action].s
     }
-}, 75)
+}
 
 function update() {
     // check keys
-    dino.idling = true;
+    //dino.idling = true;
 
     if (keys[38] || keys[32]) {
         // up arrow or space
@@ -127,6 +144,8 @@ function update() {
 
     if (keys[39]) {
         // right arrow
+        changeAction('runRight')
+
         if (dino.velX < dino.speed) {
             dino.velX++;
         }
@@ -137,6 +156,9 @@ function update() {
 
     if (keys[37]) {
         // left arrow
+        changeAction('runLeft');
+
+
         if (dino.velX > -dino.speed) {
             dino.velX--;
         }
@@ -218,15 +240,45 @@ document.body.addEventListener("keydown", function (e) {
 
 document.body.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
+    action = "idleRight"
 });
 
 function animate() {
     animationId = requestAnimationFrame(animate)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
-    ctx.drawImage(dinoImg, dino.x, dino.y, dino.w, dino.h)
+    drawDino()
     update()
 }
-animate()
+
+let stages = {
+    idleRight: { s: 0, w: 680, num: 10 },
+    idleLeft: { s: 7050, w: 680, num: 10 },
+    runRight: { s: 13630, w: 680, num: 8 },
+    runLeft: { s: 19270, w: 680, num: 8 }
+}
 
 
+let action = "idleRight"
+let x = stages[action].s
+
+function drawDino() {
+    ctx.fillStyle = "blue"
+    ctx.fillRect(dino.x, dino.y, dino.w, dino.h)
+    ctx.drawImage(dinoImg, x, 0, 430, dinoImg.height, dino.x, dino.y, 100, 100)
+}
+dinoImg.onload = animate;
+
+
+
+setInterval(function () {
+    // x += dinoImg.width / numImg
+    // if (x >= dinoImg.width) {
+    //     x = 0
+    // }
+    console.log(stages)
+    x += stages[action].w
+    if (x >= (stages[action].w * stages[action].num) + stages[action].s) {
+        x = stages[action].s
+    }
+}, 75)
