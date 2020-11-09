@@ -7,21 +7,38 @@ canvas.height = canvas.width * .6
 const bgImg = new Image()
 bgImg.src = '../images/BG/BG.png'
 
-const dinoImg = new Image()
-dinoImg.src = `../images/dino-sprites/walk/Walk (4).png`
+const dinoIdle = new Image()
+dinoIdle.src = `../images/dino-sprites/idle-right/Idle (1).png`
+i = 1
+setInterval(function () {
+
+    console.log(dino.jumping, dino.walking, dino.idling)
+    dinoIdle.src = `../images/dino-sprites/idle-right/Idle (${i}).png`
+    if (i < 10) {
+        i++
+    } else {
+        i = 1
+    }
+}, 75)
+
+
 
 let bg = { x: 0, y: 0, w: canvas.width, h: canvas.height }
 
 let dino = {
     x: 0,
-    y: 0,
+    y: canvas.height * .8,
     w: canvas.width * .2,
     h: canvas.height * .2,
     speed: 3,
     velX: 0,
     velY: 0,
     jumping: false,
-    grounded: false
+    grounded: false,
+    idling: true,
+    walking: false,
+    dying: false,
+    direction: "right"
 }
 
 let keys = [];
@@ -61,8 +78,6 @@ function update() {
         }
     }
 
-    console.log(dino)
-
     dino.velX *= friction;
     dino.velY += gravity;
 
@@ -82,19 +97,12 @@ function update() {
         }
     }
 
-    console.log(dino.velY)
-    console.log(dino.y)
-
     if (dino.grounded) {
         dino.velY = 0;
     }
 
     dino.x += dino.velX;
     dino.y += dino.velY;
-
-
-    // ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
-    // ctx.drawImage(dinoImg, dino.x, dino.y, dino.w, dino.h)
 }
 
 function collisionCheck(character, obstacle) {
@@ -145,7 +153,7 @@ function animate() {
     animationId = requestAnimationFrame(animate)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
-    ctx.drawImage(dinoImg, dino.x, dino.y, dino.w, dino.h)
+    ctx.drawImage(dinoIdle, dino.x, dino.y, dino.w, dino.h)
     update()
 }
 animate()
