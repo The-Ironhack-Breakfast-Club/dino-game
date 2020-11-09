@@ -61,6 +61,8 @@ function update() {
         }
     }
 
+    console.log(dino)
+
     dino.velX *= friction;
     dino.velY += gravity;
 
