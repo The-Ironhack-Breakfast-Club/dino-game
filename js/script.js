@@ -7,9 +7,9 @@ canvas.height = canvas.width * .6
 const bgImg = new Image()
 bgImg.src = './images/BG/BG.png'
 
-const dinoIdle = new Image()
-dinoIdle.src = ``
-i = 1
+const dinoImg = new Image()
+dinoImg.src = ``
+
 
 let bg = { x: 0, y: 0, w: canvas.width, h: canvas.height }
 
@@ -24,9 +24,16 @@ let dino = {
     jumping: false,
     grounded: false,
     idling: true,
-    walking: false,
+    running: false,
     dying: false,
     rightFacing: true
+}
+
+let dinoColPts = {
+    x: dino.x,
+    y: dino.y,
+    w: dino.w * .6,
+    h: dino.h * .8,
 }
 
 let keys = [];
@@ -43,52 +50,104 @@ boxes.push({
     h: 5
 });
 
-setInterval(function () {
-    if (dino.idling && dino.rightFacing) {
+boxes.push({
+    x: canvas.width / 2,
+    y: canvas.height - 50,
+    w: 200,
+    h: 50
+})
 
-        console.log(dino.jumping, dino.walking, dino.idling, dino.rightFacing)
-        dinoIdle.src = `./images/dino-sprites/idle-right/Idle (${i}).png`
-        if (i < 10) {
-            i++
+idleNum = 1;
+walkNum = 1;
+jumpNum = 1;
+
+setInterval(function () {
+    if (dino.jumping && dino.rightFacing) {
+        dinoImg.src = `./images/dino-sprites/jump-right/Jump (${jumpNum}).png`
+        if (jumpNum < 10) {
+            jumpNum++
         } else {
-            i = 1
+            jumpNum = 1
+        }
+        console.log(jumpNum)
+    } else if (dino.jumping && !dino.rightFacing) {
+        dinoImg.src = `./images/dino-sprites/jump-left/Jump (${jumpNum}).png`
+
+        if (jumpNum < 10) {
+            jumpNum++
+        } else {
+            jumpNum = 1
+        }
+    } else if (dino.idling && dino.rightFacing) {
+        dinoImg.src = `./images/dino-sprites/idle-right/Idle (${idleNum}).png`
+        if (idleNum < 10) {
+            idleNum++
+        } else {
+            idleNum = 1
         }
     } else if (dino.idling && !dino.rightFacing) {
-        console.log(dino.jumping, dino.walking, dino.idling, dino.rightFacing)
-        dinoIdle.src = `./images/dino-sprites/idle-left/Idle (${i}).png`
-        if (i < 10) {
-            i++
+        dinoImg.src = `./images/dino-sprites/idle-left/Idle (${idleNum}).png`
+        if (idleNum < 10) {
+            idleNum++
         } else {
-            i = 1
+            idleNum = 1
+        }
+    } else if (dino.running && dino.rightFacing) {
+        dinoImg.src = `./images/dino-sprites/run-right/Run (${walkNum}).png`
+        if (walkNum < 8) {
+            walkNum++
+        } else {
+            walkNum = 1
+        }
+    } else if (dino.running && !dino.rightFacing) {
+        dinoImg.src = `./images/dino-sprites/run-left/Run (${walkNum}).png`
+        if (walkNum < 8) {
+            walkNum++
+        } else {
+            walkNum = 1
         }
     }
 }, 75)
 
 function update() {
     // check keys
+    dino.idling = true;
+
     if (keys[38] || keys[32]) {
         // up arrow or space
         if (!dino.jumping && dino.grounded) {
             dino.jumping = true;
             dino.grounded = false;
             dino.idling = false;
-            dino.velY = -dino.speed * 2;
+            dino.velY = -dino.speed * 3;
+            dino.running = false;
+            jumpNum = 1;
         }
     }
+
     if (keys[39]) {
         // right arrow
         if (dino.velX < dino.speed) {
             dino.velX++;
         }
         dino.rightFacing = true;
+        dino.idling = false;
+        dino.running = true;
     }
+
     if (keys[37]) {
         // left arrow
         if (dino.velX > -dino.speed) {
             dino.velX--;
         }
         dino.rightFacing = false;
+        dino.idling = false;
+        dino.running = true;
     }
+
+    // if (!dino.rightFacing) {
+    //     dino.x -= dino.w * .1;
+    // }
 
     dino.velX *= friction;
     dino.velY += gravity;
@@ -97,7 +156,7 @@ function update() {
     for (let i = 0; i < boxes.length; i++) {
         ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
 
-        let side = collisionCheck(dino, boxes[i]);
+        let side = collisionCheck(dino, dinoColPts, boxes[i]);
         if (side === "l" || side === "r") {
             dino.velX = 0;
             dino.jumping = false;
@@ -117,12 +176,12 @@ function update() {
     dino.y += dino.velY;
 }
 
-function collisionCheck(character, obstacle) {
+function collisionCheck(character, collision, obstacle) {
     // get the vectors to check against
-    let vX = (character.x + (character.w / 2)) - (obstacle.x + (obstacle.w / 2)),
-        vY = (character.y + (character.h / 2)) - (obstacle.y + (obstacle.h / 2)),
+    let vX = (character.x + (collision.w / 2)) - (obstacle.x + (obstacle.w / 2)),
+        vY = (character.y + (collision.h / 2)) - (obstacle.y + (obstacle.h / 2)),
         // add the half widths and half heights of the objects
-        hWidths = (character.w / 2) + (obstacle.w / 2),
+        hWidths = (collision.w / 2) + (obstacle.w / 2),
         hHeights = (character.h / 2) + (obstacle.h / 2),
 
         collisionSide = null;
@@ -165,7 +224,7 @@ function animate() {
     animationId = requestAnimationFrame(animate)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
-    ctx.drawImage(dinoIdle, dino.x, dino.y, dino.w, dino.h)
+    ctx.drawImage(dinoImg, dino.x, dino.y, dino.w, dino.h)
     update()
 }
 animate()
