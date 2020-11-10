@@ -10,6 +10,9 @@ bgImg.src = './images/BG/BG.png'
 const dinoImg = new Image()
 dinoImg.src = `./images/dino-sprites/dino-sprite.png`
 
+const tileSprite = new Image()
+tileSprite.src = `./images/Tiles/tile-sprites.png`
+
 class Background {
     constructor(x, y, w, h) {
         this.x = 0;
@@ -55,48 +58,49 @@ let dino = {
     rightFacing: true
 }
 
-let dinoColPts = {
-    x: dino.x,
-    y: dino.y,
-    w: dino.w * .6,
-    h: dino.h * .8,
-}
-
 let keys = [];
 let friction = 0.8;
 let gravity = 0.8;
 
-let boxes = [];
+let tiles = [];
 
-// BOTTOM BOUNDARY
-boxes.push({
-    x: 0,
-    y: height,
-    w: width,
-    h: 5
-});
+class Terrain {
+    constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+        this.img = img,
+            this.sx = sx,
+            this.sy = sy,
+            this.sWidth = sWidth,
+            this.sHeight = sHeight,
+            this.dx = dx,
+            this.dy = dy,
+            this.dWidth = dWidth,
+            this.dHeight = dHeight
+    }
+}
 
-// LEFT BOUNDARY
-boxes.push({
-    x: -1,
-    y: 0,
-    w: 1,
-    h: height
-})
+let bottomBoundary = new Terrain(0, 0, height, width, 5)
+tiles.push(bottomBoundary)
 
-boxes.push({
-    x: 650,
-    y: height - 400,
-    w: 200,
-    h: 200
-})
+let leftBoundary = new Terrain(0, -1, 0, 1, height)
+tiles.push(leftBoundary)
 
-boxes.push({
-    x: 300,
-    y: height - 200,
-    w: 200,
-    h: 100
-})
+// let platform1 = new Terrain (0, 650, height - 400, 200, 200)
+// tiles.push(platform1)
+
+// let platform2 = new Terrain (0, 300, height - 200, 200 ,100)
+// tiles.push(platform2)
+
+let floor1 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 0, height - 128, 128, 128)
+let floor2 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128, height - 128, 128, 128)
+let floor3 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 2, height - 128, 128, 128)
+let floor4 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 3, height - 128, 128, 128)
+let floor5 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 4, height - 128, 128, 128)
+let floor6 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 5, height - 128, 128, 128)
+let floor7 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 6, height - 128, 128, 128)
+let floor8 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 7, height - 128, 128, 128)
+let floor9 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 8, height - 128, 128, 128)
+tiles.push(floor1, floor2, floor3, floor4, floor5, floor6, floor7, floor8, floor9)
+
 
 function update() {
     // check keys
@@ -140,33 +144,12 @@ function update() {
     dino.velY += gravity;
 
     dino.grounded = false;
-    for (let i = 2; i < boxes.length; i++) {
-        if (dino.x < width * .5) {
-            ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
-        } else if (dino.x > width * .5 && dino.running == false) {
-            ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
-        } else if (dino.x > width * .5 && dino.running == true) {
-            ctx.fillRect(boxes[i].x -= 8, boxes[i].y, boxes[i].w, boxes[i].h);
-        }
 
-        ctx.fillRect(boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h);
-        ctx.fillRect(boxes[1].x, boxes[1].y, boxes[1].w, boxes[1].h);
+    // LEFT AND BOTTOM BOUNDARIES
+    for (let i = 0; i < 2; i++) {
+        ctx.fillRect(tiles[i].x, tiles[i].y, tiles[i].w, tiles[i].h);
 
-        // if (dino.x < width * .5) {
-        //     ctx.drawImage(bgImg, this.x, this.y)
-        //     ctx.drawImage(bgImg, this.x + 1000, this.y)
-        // } else if (dino.x > width * .5 && dino.running == false) {
-        //     ctx.drawImage(bgImg, this.x, this.y)
-        //     ctx.drawImage(bgImg, this.x + 1000, this.y)
-        // } else if (dino.x > width * .5 && dino.running == true) {
-        //     ctx.drawImage(bgImg, this.x -= 1, this.y)
-        //     ctx.drawImage(bgImg, this.x + 1000, this.y)
-        //     if (this.x <= -1000) {
-        //         this.x = 0
-        //     }
-        // }
-
-        let side = collisionCheck(dino, boxes[i]);
+        let side = collisionCheck(dino, tiles[i]);
         if (side === "l" || side === "r") {
             dino.velX = 0;
             dino.jumping = false;
@@ -178,6 +161,30 @@ function update() {
         }
     }
 
+    // tiles AND PLATFORMS ETC
+    for (let i = 2; i < tiles.length; i++) {
+        if (dino.x < width * .5) {
+            ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
+        } else if (dino.x > width * .5 && dino.running == false) {
+            ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
+        } else if (dino.x > width * .5 && dino.running == true) {
+            ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
+        }
+
+        let side = collisionCheck(dino, tiles[i]);
+        if (side === "l" || side === "r") {
+            dino.velX = 0;
+            dino.jumping = false;
+        } else if (side === "b") {
+            dino.grounded = true;
+            dino.jumping = false;
+        } else if (side === "t") {
+            dino.velY *= -1;
+        }
+    }
+
+    console.log(tiles)
+
     if (dino.grounded) {
         dino.velY = 0;
     }
@@ -188,11 +195,11 @@ function update() {
 
 function collisionCheck(character, obstacle) {
     // get the vectors to check against
-    let vX = (character.x + (character.w * .5)) - (obstacle.x + (obstacle.w / 2)),
-        vY = (character.y + (character.h * .5)) - (obstacle.y + (obstacle.h / 2)),
+    let vX = (character.x + (character.w * .5)) - (obstacle.dx + (obstacle.dWidth / 2)),
+        vY = (character.y + (character.h * .5)) - (obstacle.dy + (obstacle.dHeight / 2)),
         // add the half widths and half heights of the objects
-        hWidths = (character.w * .4) + (obstacle.w / 2),
-        hHeights = (character.h * .4) + (obstacle.h / 2),
+        hWidths = (character.w * .4) + (obstacle.dWidth / 2),
+        hHeights = (character.h * .4) + (obstacle.dHeight / 2),
 
         collisionSide = null;
     // if the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision
