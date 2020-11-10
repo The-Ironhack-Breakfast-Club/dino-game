@@ -19,7 +19,7 @@ class Background {
     }
 
     render() {
-        if (dino.x <= width * .5) {
+        if (dino.x < width * .5) {
             ctx.drawImage(bgImg, this.x, this.y)
             ctx.drawImage(bgImg, this.x + 1000, this.y)
         } else if (dino.x > width * .5 && dino.running == false) {
@@ -64,7 +64,7 @@ let dinoColPts = {
 
 let keys = [];
 let friction = 0.8;
-let gravity = 0.3;
+let gravity = 0.8;
 
 let boxes = [];
 
@@ -76,6 +76,7 @@ boxes.push({
     h: 5
 });
 
+// LEFT BOUNDARY
 boxes.push({
     x: -1,
     y: 0,
@@ -84,10 +85,17 @@ boxes.push({
 })
 
 boxes.push({
-    x: width / 2,
-    y: height - 50,
+    x: 650,
+    y: height - 400,
     w: 200,
-    h: 50
+    h: 200
+})
+
+boxes.push({
+    x: 300,
+    y: height - 200,
+    w: 200,
+    h: 100
 })
 
 function update() {
@@ -101,7 +109,7 @@ function update() {
             dino.jumping = true;
             dino.grounded = false;
             dino.idling = false;
-            dino.velY = -dino.speed * 2;
+            dino.velY = -dino.speed * 3.5;
             dino.running = false;
         }
     }
@@ -133,7 +141,27 @@ function update() {
 
     dino.grounded = false;
     for (let i = 0; i < boxes.length; i++) {
-        ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
+        if (dino.x < width * .5) {
+            ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
+        } else if (dino.x > width * .5 && dino.running == false) {
+            ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
+        } else if (dino.x > width * .5 && dino.running == true) {
+            ctx.fillRect(boxes[i].x -= 8, boxes[i].y, boxes[i].w, boxes[i].h);
+        }
+
+        // if (dino.x < width * .5) {
+        //     ctx.drawImage(bgImg, this.x, this.y)
+        //     ctx.drawImage(bgImg, this.x + 1000, this.y)
+        // } else if (dino.x > width * .5 && dino.running == false) {
+        //     ctx.drawImage(bgImg, this.x, this.y)
+        //     ctx.drawImage(bgImg, this.x + 1000, this.y)
+        // } else if (dino.x > width * .5 && dino.running == true) {
+        //     ctx.drawImage(bgImg, this.x -= 1, this.y)
+        //     ctx.drawImage(bgImg, this.x + 1000, this.y)
+        //     if (this.x <= -1000) {
+        //         this.x = 0
+        //     }
+        // }
 
         let side = collisionCheck(dino, boxes[i]);
         if (side === "l" || side === "r") {
@@ -197,11 +225,6 @@ document.body.addEventListener("keydown", function (e) {
 
 document.body.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
-    if (dino.rightFacing == true) {
-        action = 'idleRight'
-    } else if (dino.rightFacing == false) {
-        action = 'idleLeft'
-    }
 });
 
 let stages = {
@@ -225,7 +248,18 @@ function changeAction(newAction) {
     }
 }
 
+function drawDino() {
+    // ctx.fillStyle = "blue"
+    // ctx.fillRect(dino.x, dino.y, dino.w, dino.h)
+    ctx.drawImage(dinoImg, x, 0, 430, dinoImg.height, dino.x, dino.y, dino.w, dino.h)
+}
+dinoImg.onload = animate;
+
 setInterval(function () {
+    x += stages[action].w
+    if (x >= (stages[action].w * stages[action].num) + stages[action].s) {
+        x = stages[action].s
+    }
     if (dino.jumping && dino.rightFacing) {
         changeAction('jumpRight');
         dino.running = false;
@@ -243,21 +277,7 @@ setInterval(function () {
     } else if (dino.running && !dino.rightFacing) {
         changeAction('runLeft');
     }
-}, 75)
-
-function drawDino() {
-    // ctx.fillStyle = "blue"
-    // ctx.fillRect(dino.x, dino.y, dino.w, dino.h)
-    ctx.drawImage(dinoImg, x, 0, 430, dinoImg.height, dino.x, dino.y, dino.w, dino.h)
-}
-dinoImg.onload = animate;
-
-setInterval(function () {
-    x += stages[action].w
-    if (x >= (stages[action].w * stages[action].num) + stages[action].s) {
-        x = stages[action].s
-    }
-}, 75)
+}, 65)
 
 function animate() {
     animationId = requestAnimationFrame(animate)
