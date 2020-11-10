@@ -16,11 +16,8 @@ let bg = { x: 0, y: 0, w: width, h: height }
 let dino = {
     x: 0,
     y: 0,
-    w: 80,
-    h: 80,
-    // y: height * .8,
-    // w: width,
-    // h: height * .2,
+    w: 75,
+    h: 75,
     speed: 3,
     velX: 0,
     velY: 0,
@@ -60,16 +57,9 @@ boxes.push({
     h: 50
 })
 
-idleNum = 1;
-walkNum = 1;
-jumpNum = 1;
-
-
-
-
-
-
-
+// idleNum = 1;
+// walkNum = 1;
+// jumpNum = 1;
 
 // setInterval(function () {
 //     if (dino.jumping && dino.rightFacing) {
@@ -143,7 +133,6 @@ function update() {
             dino.idling = false;
             dino.velY = -dino.speed * 3;
             dino.running = false;
-            jumpNum = 1;
         }
     }
 
@@ -198,11 +187,11 @@ function update() {
 
 function collisionCheck(character, obstacle) {
     // get the vectors to check against
-    let vX = (character.x + (character.w / 2)) - (obstacle.x + (obstacle.w / 2)),
-        vY = (character.y + (character.h / 2)) - (obstacle.y + (obstacle.h / 2)),
+    let vX = (character.x + (character.w * .5)) - (obstacle.x + (obstacle.w / 2)),
+        vY = (character.y + (character.h * .5)) - (obstacle.y + (obstacle.h / 2)),
         // add the half widths and half heights of the objects
-        hWidths = (character.w / 2) + (obstacle.w / 2),
-        hHeights = (character.h / 2) + (obstacle.h / 2),
+        hWidths = (character.w * .3) + (obstacle.w / 2),
+        hHeights = (character.h * .4) + (obstacle.h / 2),
 
         collisionSide = null;
     // if the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision
@@ -255,7 +244,7 @@ function animate() {
 
 let stages = {
     idleRight: { s: -30, w: 680, num: 10 },
-    idleLeft: { s: 7085, w: 680, num: 10 },
+    idleLeft: { s: 7080, w: 680, num: 10 },
     runRight: { s: 13620, w: 680, num: 8 },
     runLeft: { s: 19270, w: 680, num: 8 },
     jumpRight: { s: 24500, w: 680, num: 10 },
