@@ -140,7 +140,7 @@ function update() {
     dino.velY += gravity;
 
     dino.grounded = false;
-    for (let i = 0; i < boxes.length; i++) {
+    for (let i = 2; i < boxes.length; i++) {
         if (dino.x < width * .5) {
             ctx.fillRect(boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h);
         } else if (dino.x > width * .5 && dino.running == false) {
@@ -148,6 +148,9 @@ function update() {
         } else if (dino.x > width * .5 && dino.running == true) {
             ctx.fillRect(boxes[i].x -= 8, boxes[i].y, boxes[i].w, boxes[i].h);
         }
+
+        ctx.fillRect(boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h);
+        ctx.fillRect(boxes[1].x, boxes[1].y, boxes[1].w, boxes[1].h);
 
         // if (dino.x < width * .5) {
         //     ctx.drawImage(bgImg, this.x, this.y)
