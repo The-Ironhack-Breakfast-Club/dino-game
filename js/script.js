@@ -77,6 +77,13 @@ boxes.push({
 });
 
 boxes.push({
+    x: -1,
+    y: 0,
+    w: 1,
+    h: height
+})
+
+boxes.push({
     x: width / 2,
     y: height - 50,
     w: 200,
