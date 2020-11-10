@@ -44,7 +44,7 @@ let dino = {
     y: 0,
     w: 100,
     h: 100,
-    speed: 3,
+    speed: 6,
     velX: 0,
     velY: 0,
     jumping: false,
@@ -94,7 +94,7 @@ function update() {
             dino.jumping = true;
             dino.grounded = false;
             dino.idling = false;
-            dino.velY = -dino.speed * 3;
+            dino.velY = -dino.speed * 2;
             dino.running = false;
         }
     }
@@ -103,7 +103,7 @@ function update() {
         // right arrow
         if (dino.x < width * .5) {
             if (dino.velX < dino.speed) {
-                dino.velX++;
+                dino.velX += 3;
             }
         }
         dino.rightFacing = true;
@@ -114,7 +114,7 @@ function update() {
     if (keys[37]) {
         // left arrow
         if (dino.velX > -dino.speed) {
-            dino.velX--;
+            dino.velX -= 3;
         }
         dino.rightFacing = false;
         dino.idling = false;
