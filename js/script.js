@@ -1,8 +1,8 @@
 const canvas = document.querySelector('#canvas')
 const ctx = canvas.getContext('2d')
 
-let width = canvas.width = 800
-let height = canvas.height = 450
+let width = canvas.width = 1000
+let height = canvas.height = 750
 
 const bgImg = new Image()
 bgImg.src = './images/BG/BG.png'
@@ -10,14 +10,40 @@ bgImg.src = './images/BG/BG.png'
 const dinoImg = new Image()
 dinoImg.src = `./images/dino-sprites/dino-sprite.png`
 
+class Background {
+    constructor(x, y, w, h) {
+        this.x = 0;
+        this.y = 0;
+        this.w = width;
+        this.h = height;
+    }
+
+    render() {
+        if (dino.x <= width * .5) {
+            ctx.drawImage(bgImg, this.x, this.y)
+            ctx.drawImage(bgImg, this.x + 1000, this.y)
+        } else if (dino.x > width * .5 && dino.running == false) {
+            ctx.drawImage(bgImg, this.x, this.y)
+            ctx.drawImage(bgImg, this.x + 1000, this.y)
+        } else if (dino.x > width * .5 && dino.running == true) {
+            ctx.drawImage(bgImg, this.x -= 1, this.y)
+            ctx.drawImage(bgImg, this.x + 1000, this.y)
+            if (this.x <= -1000) {
+                this.x = 0
+            }
+        }
+    }
+}
+
+let scrollingBackground = new Background();
 
 let bg = { x: 0, y: 0, w: width, h: height }
 
 let dino = {
     x: 0,
     y: 0,
-    w: 75,
-    h: 75,
+    w: 100,
+    h: 100,
     speed: 3,
     velX: 0,
     velY: 0,
@@ -60,6 +86,7 @@ boxes.push({
 function update() {
     // check keys
     dino.idling = true;
+    // console.log(dino.x, width * .5, dino.running)
 
     if (keys[38] || keys[32]) {
         // up arrow or space
@@ -74,8 +101,10 @@ function update() {
 
     if (keys[39]) {
         // right arrow
-        if (dino.velX < dino.speed) {
-            dino.velX++;
+        if (dino.x < width * .5) {
+            if (dino.velX < dino.speed) {
+                dino.velX++;
+            }
         }
         dino.rightFacing = true;
         dino.idling = false;
@@ -168,14 +197,6 @@ document.body.addEventListener("keyup", function (e) {
     }
 });
 
-function animate() {
-    animationId = requestAnimationFrame(animate)
-    ctx.clearRect(0, 0, width, height);
-    ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
-    drawDino()
-    update()
-}
-
 let stages = {
     idleRight: { s: -30, w: 680, num: 10 },
     idleLeft: { s: 7080, w: 680, num: 10 },
@@ -200,12 +221,16 @@ function changeAction(newAction) {
 setInterval(function () {
     if (dino.jumping && dino.rightFacing) {
         changeAction('jumpRight');
+        dino.running = false;
     } else if (dino.jumping && !dino.rightFacing) {
         changeAction('jumpLeft');
+        dino.running = false;
     } else if (dino.idling && dino.rightFacing) {
         changeAction('idleRight');
+        dino.running = false;
     } else if (dino.idling && !dino.rightFacing) {
         changeAction('idleLeft');
+        dino.running = false;
     } else if (dino.running && dino.rightFacing) {
         changeAction('runRight');
     } else if (dino.running && !dino.rightFacing) {
@@ -226,3 +251,12 @@ setInterval(function () {
         x = stages[action].s
     }
 }, 75)
+
+function animate() {
+    animationId = requestAnimationFrame(animate)
+    ctx.clearRect(0, 0, width, height);
+    // ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
+    scrollingBackground.render()
+    drawDino()
+    update()
+}
