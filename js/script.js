@@ -117,6 +117,7 @@ function update() {
 
     if (keys[38] || keys[32]) {
         // up arrow or space
+        gravity = 1.3
         if (!dino.jumping && dino.grounded) {
             gravity = 1.3
             dino.jumping = true;
@@ -129,6 +130,7 @@ function update() {
 
     if (keys[39]) {
         // right arrow
+        gravity = 1.3
         if (dino.x < width * .5) {
             if (dino.velX < dino.speed) {
                 dino.velX += 3;
@@ -141,6 +143,7 @@ function update() {
 
     if (keys[37]) {
         // left arrow
+        gravity = 1.3
         if (dino.velX > -dino.speed) {
             dino.velX -= 3;
         }
@@ -194,6 +197,7 @@ function update() {
 
     if (dino.grounded) {
         dino.velY = 0;
+        gravity = 0;
     }
 
     dino.x = Math.min(dino.velX + dino.x, width * .5);
