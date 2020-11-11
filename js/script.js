@@ -65,7 +65,7 @@ let dino = {
 
 let keys = [];
 let friction = 0.8;
-let gravity = 0.8;
+let gravity = 1.3;
 
 let tiles = [];
 
@@ -120,7 +120,7 @@ function update() {
             dino.jumping = true;
             dino.grounded = false;
             dino.idling = false;
-            dino.velY = -dino.speed * 3.5;
+            dino.velY = -dino.speed * 4.6;
             dino.running = false;
         }
     }
