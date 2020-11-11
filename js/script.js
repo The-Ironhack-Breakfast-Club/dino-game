@@ -311,24 +311,53 @@ function animate() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function lvl1Floor() {
+function floor() {
     for (i = 0; i < 200; i++) {
         tiles.push(new Terrain(tileSprite, 128 * 1, 0, 128, 128, i * 128, height - 128, 128, 128))
     }
 }
-lvl1Floor()
+floor()
 
 
-function platformLvl1(xLocation, yLocation, length) {
-    tiles.push(new Terrain(tileSprite, 128 * 12, 0, 128, 128, (xLocation - 2) * 128, height - (128 * yLocation), 138, 128))
-    for (i = 0; i < length - 2; i++) {
-        tiles.push(new Terrain(tileSprite, 128 * 13, 0, 128, 128, ((xLocation - 1 + i) * 128), height - (128 * yLocation), 138, 128))
+function platform(img, xLocation, yLocation, width) {
+    tiles.push(new Terrain(img, 128 * 12, 0, 128, 128, (xLocation - 2) * 128, height - (128 * yLocation), 138, 128))
+    for (i = 0; i < width - 2; i++) {
+        tiles.push(new Terrain(img, 128 * 13, 0, 128, 128, ((xLocation - 1 + i) * 128), height - (128 * yLocation), 138, 128))
     }
-    tiles.push(new Terrain(tileSprite, 128 * 14, 0, 128, 128, ((xLocation) * 128) + (128 * (length - 3)), height - (128 * yLocation), 138, 128))
+    tiles.push(new Terrain(img, 128 * 14, 0, 128, 128, ((xLocation) * 128) + (128 * (width - 3)), height - (128 * yLocation), 138, 128))
 }
-platformLvl1(5, 2.7, 4)
-platformLvl1(8, 4, 4)
-platformLvl1(12, 3.5, 6)
-platformLvl1(16, 2.7, 3)
-platformLvl1(18, 2.7, 4)
-platformLvl1(21, 4, 5)
+// platform(tileSprite, 5, 2.7, 4)
+// platform(tileSprite, 8, 4, 4)
+// platform(tileSprite, 12, 3.5, 6)
+platform(tileSprite, 4, 2.2, 2)
+platform(tileSprite, 20, 2.7, 4)
+platform(tileSprite, 23, 4, 5)
+
+function hill(img, xLocation, width, height) {
+    //////////////LAYER 1//////////////
+    tiles.push(new Terrain(img, 128 * 6, 0, 128, 128, (xLocation - 1) * 128, canvas.height - 128, 138, 128))
+    tiles.push(new Terrain(img, 128 * 7, 0, 128, 128, (xLocation) * 128, canvas.height - 128, 138, 128))
+    for (i = 0; i < width - 2; i++) {
+        tiles.push(new Terrain(img, 128 * 4, 0, 128, 128, (xLocation + (i + 1)) * 128, canvas.height - 128, 138, 128))
+    }
+    tiles.push(new Terrain(img, 128 * 9, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128, 138, 128))
+    tiles.push(new Terrain(img, 128 * 10, 0, 128, 128, (xLocation + width) * 128, canvas.height - 128, 138, 128))
+    //////////////LAYER 2//////////////
+    if (height > 1) {
+        for (i = 2; i <= height; i++) {
+            tiles.push(new Terrain(img, 128 * 3, 0, 128, 128, (xLocation) * 128, canvas.height - 128 * i, 138, 128))
+            for (j = 0; j < width - 2; j++) {
+                tiles.push(new Terrain(img, 128 * 4, 0, 128, 128, (xLocation + j + 1) * 128, canvas.height - 128 * i, 138, 128))
+            }
+            tiles.push(new Terrain(img, 128 * 5, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128 * i, 138, 128))
+        }
+    }
+    //////////////LAYER 3//////////////
+    tiles.push(new Terrain(img, 128 * 0, 0, 128, 128, (xLocation) * 128, canvas.height - 128 * (height + 1), 138, 128))
+    for (i = 0; i < width - 2; i++) {
+        tiles.push(new Terrain(img, 128 * 1, 0, 128, 128, (xLocation + (i + 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
+    }
+    tiles.push(new Terrain(img, 128 * 2, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
+}
+hill(tileSprite, 3, 14, 2)
+
