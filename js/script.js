@@ -311,9 +311,20 @@ function animate() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function lvl1Floor () {
+function lvl1Floor() {
     for (i = 0; i < 200; i++) {
         tiles.push(new Terrain(tileSprite, 128 * 1, 0, 128, 128, i * 128, height - 128, 128, 128))
     }
 }
 lvl1Floor()
+
+
+
+function lvl1Island() {
+    for (i = 0; i < 200; i += 20) {
+        tiles.push(new Terrain(tileSprite, 128 * 12, 0, 128, 128, 1 * 128, height - (128 * 2.5), 128, 128))
+        tiles.push(new Terrain(tileSprite, 128 * 13, 0, 128, 128, 2 * 128, height - (128 * 2.5), 128, 128))
+        tiles.push(new Terrain(tileSprite, 128 * 14, 0, 128, 128, 3 * 128, height - (128 * 2.5), 128, 128))
+    }
+}
+lvl1Island()
