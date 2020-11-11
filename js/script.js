@@ -321,10 +321,14 @@ lvl1Floor()
 
 
 function lvl1Island() {
-    for (i = 0; i < 200; i += 20) {
-        tiles.push(new Terrain(tileSprite, 128 * 12, 0, 128, 128, 1 * 128, height - (128 * 2.5), 128, 128))
-        tiles.push(new Terrain(tileSprite, 128 * 13, 0, 128, 128, 2 * 128, height - (128 * 2.5), 128, 128))
-        tiles.push(new Terrain(tileSprite, 128 * 14, 0, 128, 128, 3 * 128, height - (128 * 2.5), 128, 128))
+    for (i = 1; i < 200; i += 20) {
+        tiles.push(new Terrain(tileSprite, 128 * 12, 0, 128, 128, (4 + i) * 128, height - (128 * 2 + 100), 128, 128))
+        tiles.push(new Terrain(tileSprite, 128 * 13, 0, 128, 128, (5 + i) * 128, height - (128 * 2 + 100), 128, 128))
+        tiles.push(new Terrain(tileSprite, 128 * 14, 0, 128, 128, (6 + i) * 128, height - (128 * 2 + 100), 128, 128))
+
+        tiles.push(new Terrain(tileSprite, 128 * 12, 0, 128, 128, (10 + i) * 128, height - (128 * 2 + 150), 128, 128))
+        tiles.push(new Terrain(tileSprite, 128 * 13, 0, 128, 128, (11 + i) * 128, height - (128 * 2 + 150), 128, 128))
+        tiles.push(new Terrain(tileSprite, 128 * 14, 0, 128, 128, (12 + i) * 128, height - (128 * 2 + 150), 128, 128))
     }
 }
 lvl1Island()
