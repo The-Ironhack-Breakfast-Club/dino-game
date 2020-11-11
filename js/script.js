@@ -15,6 +15,9 @@ dinoImg.src = `./images/dino-sprites/dino-sprite.png`
 const tileSprite = new Image()
 tileSprite.src = `./images/Tiles/tile-sprites.png`
 
+const objectSprite = new Image()
+objectSprite.src = `../images/Object/object-sprites.png`
+
 class Background {
     constructor(x, y, w, h) {
         this.x = 0;
@@ -27,10 +30,10 @@ class Background {
         if (dino.x < width * .5) {
             ctx.drawImage(bgImg, this.x, this.y)
             ctx.drawImage(bgImg, this.x + 1000, this.y)
-        } else if (dino.x > width * .5 && dino.running == false) {
+        } else if (dino.x >= width * .5 && dino.running == false) {
             ctx.drawImage(bgImg, this.x, this.y)
             ctx.drawImage(bgImg, this.x + 1000, this.y)
-        } else if (dino.x > width * .5 && dino.running == true) {
+        } else if (dino.x >= width * .5 && dino.running == true) {
             ctx.drawImage(bgImg, this.x -= 1, this.y)
             ctx.drawImage(bgImg, this.x + 1000, this.y)
             if (this.x <= -1000) {
@@ -66,6 +69,20 @@ let gravity = 0.8;
 
 let tiles = [];
 
+class Objects {
+    constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+        this.img = img,
+            this.sx = sx,
+            this.sy = sy,
+            this.sWidth = sWidth,
+            this.sHeight = sHeight,
+            this.dx = dx,
+            this.dy = dy,
+            this.dWidth = dWidth,
+            this.dHeight = dHeight
+    }
+}
+
 class Terrain {
     constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
         this.img = img,
@@ -91,18 +108,6 @@ tiles.push(leftBoundary)
 
 // let platform2 = new Terrain (0, 300, height - 200, 200 ,100)
 // tiles.push(platform2)
-
-let floor1 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 0, height - 128, 128, 128)
-let floor2 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128, height - 128, 128, 128)
-let floor3 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 2, height - 128, 128, 128)
-let floor4 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 3, height - 128, 128, 128)
-let floor5 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 4, height - 128, 128, 128)
-let floor6 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 5, height - 128, 128, 128)
-let floor7 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 6, height - 128, 128, 128)
-let floor8 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 7, height - 128, 128, 128)
-let floor9 = new Terrain(tileSprite, 128 * 1, 0, 128, 128, 128 * 8, height - 128, 128, 128)
-tiles.push(floor1, floor2, floor3, floor4, floor5, floor6, floor7, floor8, floor9)
-
 
 function update() {
     // check keys
@@ -167,9 +172,9 @@ function update() {
     for (let i = 2; i < tiles.length; i++) {
         if (dino.x < width * .5) {
             ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
-        } else if (dino.x > width * .5 && dino.running == false) {
+        } else if (dino.x >= width * .5 && dino.running == false) {
             ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
-        } else if (dino.x > width * .5 && dino.running == true) {
+        } else if (dino.x >= width * .5 && dino.running == true) {
             ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx -= 8, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
         }
 
@@ -185,13 +190,13 @@ function update() {
         }
     }
 
-    console.log(tiles)
+    console.log(dino.x)
 
     if (dino.grounded) {
         dino.velY = 0;
     }
 
-    dino.x += dino.velX;
+    dino.x = Math.min(dino.velX + dino.x, width * .5);
     dino.y += dino.velY;
 }
 
@@ -291,6 +296,7 @@ setInterval(function () {
     }
 }, 65)
 
+ctx.font = "50px Arial"
 function animate() {
     animationId = requestAnimationFrame(animate)
     ctx.clearRect(0, 0, width, height);
@@ -298,4 +304,18 @@ function animate() {
     scrollingBackground.render()
     drawDino()
     update()
+    ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 80, 60)
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////// LEVEL ONEEEEEEEE FIGHT! (DIABETES) ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function lvl1Floor () {
+    for (i = 0; i < 200; i++) {
+        tiles.push(new Terrain(tileSprite, 128 * 1, 0, 128, 128, i * 128, height - 128, 128, 128))
+    }
+}
+lvl1Floor()
