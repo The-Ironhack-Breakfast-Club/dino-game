@@ -97,10 +97,10 @@ class Terrain {
     }
 }
 
-let bottomBoundary = new Terrain(0, 0, height, width, 5)
+let bottomBoundary = new Terrain(0, 0, height, width, 5, 0, height, width, 5)
 tiles.push(bottomBoundary)
 
-let leftBoundary = new Terrain(0, -1, 0, 1, height)
+let leftBoundary = new Terrain(0, 5, 0, 5, height, 5, 0, 5, height)
 tiles.push(leftBoundary)
 
 // let platform1 = new Terrain (0, 650, height - 400, 200, 200)
@@ -189,8 +189,6 @@ function update() {
             dino.velY *= -1;
         }
     }
-
-    console.log(dino.x)
 
     if (dino.grounded) {
         dino.velY = 0;
@@ -304,7 +302,7 @@ function animate() {
     scrollingBackground.render()
     drawDino()
     update()
-    ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 80, 60)
+    ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 100, 60)
 }
 
 
