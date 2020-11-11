@@ -112,11 +112,13 @@ tiles.push(leftBoundary)
 function update() {
     // check keys
     dino.idling = true;
-    // console.log(dino.x, width * .5, dino.running)
+
+    console.log(gravity)
 
     if (keys[38] || keys[32]) {
         // up arrow or space
         if (!dino.jumping && dino.grounded) {
+            gravity = 1.3
             dino.jumping = true;
             dino.grounded = false;
             dino.idling = false;
@@ -306,8 +308,9 @@ function animate() {
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////// LEVEL ONEEEEEEEE FIGHT! (DIABETES) ////////////////////////////////////////////////////////////////////////////////
+///////////////// LEVEL ONEEEEEEEE FUNCTIONS -- FIGHT! (DIABETES) ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -319,21 +322,15 @@ function floor() {
 floor()
 
 
-function platform(img, xLocation, yLocation, width) {
+function floatingPlatform(img, xLocation, yLocation, width) {
     tiles.push(new Terrain(img, 128 * 12, 0, 128, 128, (xLocation - 2) * 128, height - (128 * yLocation), 138, 128))
     for (i = 0; i < width - 2; i++) {
         tiles.push(new Terrain(img, 128 * 13, 0, 128, 128, ((xLocation - 1 + i) * 128), height - (128 * yLocation), 138, 128))
     }
     tiles.push(new Terrain(img, 128 * 14, 0, 128, 128, ((xLocation) * 128) + (128 * (width - 3)), height - (128 * yLocation), 138, 128))
 }
-// platform(tileSprite, 5, 2.7, 4)
-// platform(tileSprite, 8, 4, 4)
-// platform(tileSprite, 12, 3.5, 6)
-platform(tileSprite, 4, 2.2, 2)
-platform(tileSprite, 20, 2.7, 4)
-platform(tileSprite, 23, 4, 5)
 
-function hill(img, xLocation, width, height) {
+function platform(img, xLocation, width, height) {
     //////////////LAYER 1//////////////
     tiles.push(new Terrain(img, 128 * 6, 0, 128, 128, (xLocation - 1) * 128, canvas.height - 128, 138, 128))
     tiles.push(new Terrain(img, 128 * 7, 0, 128, 128, (xLocation) * 128, canvas.height - 128, 138, 128))
@@ -359,5 +356,13 @@ function hill(img, xLocation, width, height) {
     }
     tiles.push(new Terrain(img, 128 * 2, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
 }
-hill(tileSprite, 3, 14, 2)
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////BUILD LEVEL 1//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+floatingPlatform(tileSprite, 4, 2.2, 2)
+floatingPlatform(tileSprite, 20, 2.7, 4)
+floatingPlatform(tileSprite, 23, 4, 5)
+platform(tileSprite, 3, 14, 2)
 
