@@ -40,7 +40,7 @@ class Background {
             ctx.drawImage(bgImg, this.x -= 1, this.y)
             ctx.drawImage(bgImg, this.x + 1000, this.y)
             if (this.x <= -1000) {
-                this.x = 0
+                this.x = 1000
             }
         }
     }
@@ -99,7 +99,7 @@ class Objects {
 let enemies = [];
 
 class Enemy {
-    constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+    constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, speed, velX, velY, grounded, idling, walking, dying, rightFacing) {
         this.img = img,
             this.sx = sx,
             this.sy = sy,
@@ -109,18 +109,18 @@ class Enemy {
             this.dy = dy,
             this.dWidth = dWidth,
             this.dHeight = dHeight,
-            this.speed = 6,
-            this.velX = 0,
-            this.velY = 0,
-            this.grounded = false,
-            this.dying = false,
-            this.rightFacing = true
+            this.speed = speed,
+            this.velX = velX,
+            this.velY = velY,
+            this.grounded = grounded,
+            this.idling = idling,
+            this.walking = walking,
+            this.dying = dying,
+            this.rightFacing = rightFacing
     }
 }
 
-let enemy = new Enemy(enemyImg, 0, 0, 0, 0, 6, 100, 365 / 8, 512 / 8);
-
-console.log(enemy.img)
+let enemy = new Enemy(enemyImg, 0, 0, 0, 0, 500, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true);
 
 let syrup = new Objects(objectSprite, 1483, 0, 365, 512, 6, 10, 365 / 8, 512 / 8)
 
@@ -169,6 +169,9 @@ function update() {
                 dino.velX += 3;
             }
         }
+        if (dino.x == 500) {
+            enemy.dx -= 8;
+        }
         dino.rightFacing = true;
         dino.idling = false;
         dino.running = true;
@@ -197,7 +200,7 @@ function update() {
     for (let i = 0; i < 2; i++) {
         ctx.fillRect(tiles[i].x, tiles[i].y, tiles[i].w, tiles[i].h);
 
-        let side = collisionCheck(dino, tiles[i]);
+        let side = collisionCheckCharObs(dino, tiles[i]);
         if (side === "l" || side === "r") {
             dino.velX = 0;
             dino.jumping = false;
@@ -209,21 +212,7 @@ function update() {
         }
     }
 
-    //In relation to enemy
-    for (let i = 0; i < 2; i++) {
-        ctx.fillRect(tiles[i].x, tiles[i].y, tiles[i].w, tiles[i].h);
-
-        let side = collisionCheck(enemy, tiles[i]);
-        if (side === "l" || side === "r") {
-            enemy.velX = 0;
-        } else if (side === "b") {
-            enemy.grounded = true;
-        } else if (side === "t") {
-            enemy.velY *= -1;
-        }
-    }
-
-    // tiles AND PLATFORMS ETC
+    // chcaracter in relation to tiles AND PLATFORMS ETC
     for (let i = 2; i < tiles.length; i++) {
         if (dino.x < width * .5) {
             ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
@@ -232,7 +221,7 @@ function update() {
         } else if (dino.x >= width * .5 && dino.running == true) {
             ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx -= 8, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
         }
-        let side = collisionCheck(dino, tiles[i]);
+        let side = collisionCheckCharObs(dino, tiles[i]);
         if (side === "l" || side === "r") {
             dino.velX = 0;
             dino.jumping = false;
@@ -248,7 +237,30 @@ function update() {
         gravity = 0;
     }
 
-    //In relation to enemy
+    //Enemy in relation to obstacles
+    for (let i = 2; i < tiles.length; i++) {
+        ctx.fillRect(tiles[i].x, tiles[i].y, tiles[i].w, tiles[i].h);
+
+        let sideEnemy = collisionCheckEnemyObs(enemy, tiles[i]);
+        if (sideEnemy === "l" || sideEnemy === "r") {
+            enemy.rightFacing = true;
+        } else if (sideEnemy === "b") {
+            enemy.grounded = true;
+        } else if (sideEnemy === "t") {
+            enemy.velY *= -1;
+        }
+    }
+
+    //character in relation to enemyStages[actionEnemy]
+    let sideChar = collisionCheckCharEnemy(dino, enemy);
+    if (sideChar === "l" || sideChar === "r") {
+        dino.dying = true;
+    } else if (sideChar === "b") {
+        enemy.dying = true;
+    } else if (sideChar === "t") {
+        dino.dying = true;
+    }
+    console.log(dino.dying, enemy.dying)
     if (enemy.grounded) {
         enemy.velY = 0;
     }
@@ -256,13 +268,16 @@ function update() {
     dino.x = Math.min(dino.velX + dino.x, width * .5);
     dino.y += dino.velY;
 
+    if (enemy.walking == true && enemy.rightFacing == true) {
+        enemy.dx += 2;
+    } else if (enemy.walking == true && enemy.rightFacing != true) {
+        enemy.dx -= 2;
+    }
 
-
-    enemy.x = Math.min(enemy.velX + enemy.x, width * .5);
-    enemy.y += enemy.velY;
+    enemy.dy += enemy.velY;
 }
 
-function collisionCheck(character, obstacle) {
+function collisionCheckCharObs(character, obstacle) {
     // get the vectors to check against
     let vX = (character.x + (character.w * .5)) - (obstacle.dx + (obstacle.dWidth / 2)),
         vY = (character.y + (character.h * .5)) - (obstacle.dy + (obstacle.dHeight / 2)),
@@ -270,6 +285,78 @@ function collisionCheck(character, obstacle) {
         // add the half widths and half heights of the objects
         hWidths = (character.w * .4) + (obstacle.dWidth / 2),
         hHeights = (character.h * .4) + (obstacle.dHeight / 2),
+
+        collisionSide = null;
+    // if the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision
+    if (Math.abs(vX) < hWidths && Math.abs(vY) < hHeights) {
+        // figures out on which side we are colliding (top, bottom, left, or right)
+        let oX = hWidths - Math.abs(vX),
+            oY = hHeights - Math.abs(vY);
+        if (oX >= oY) {
+            if (vY > 0) {
+                collisionSide = "t";
+                character.y += oY;
+            } else {
+                collisionSide = "b";
+                character.y -= oY;
+            }
+        } else {
+            if (vX > 0) {
+                collisionSide = "l";
+                character.x += oX;
+            } else {
+                collisionSide = "r";
+                character.x -= oX;
+            }
+        }
+    }
+    return collisionSide;
+}
+
+function collisionCheckEnemyObs(enemy, obstacle) {
+    // get the vectors to check against
+    let vX = (enemy.dx + (enemy.dWidth * .5)) - (obstacle.dx + (obstacle.dWidth / 2)),
+        vY = (enemy.dy + (enemy.dHeight * .5)) - (obstacle.dy + (obstacle.dHeight / 2)),
+
+        // add the half widths and half heights of the objects
+        hWidths = (enemy.dWidth * .5) + (obstacle.dWidth / 2),
+        hHeights = (enemy.dHeight * .5) + (obstacle.dHeight / 2),
+
+        collisionSide = null;
+    // if the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision
+    if (Math.abs(vX) < hWidths && Math.abs(vY) < hHeights) {
+        // figures out on which side we are colliding (top, bottom, left, or right)
+        let oX = hWidths - Math.abs(vX),
+            oY = hHeights - Math.abs(vY);
+        if (oX >= oY) {
+            if (vY > 0) {
+                collisionSide = "t";
+                enemy.dy += oY;
+            } else {
+                collisionSide = "b";
+                enemy.dy -= oY;
+            }
+        } else {
+            if (vX > 0) {
+                collisionSide = "l";
+                enemy.dx += oX;
+            } else {
+                collisionSide = "r";
+                enemy.dx -= oX;
+            }
+        }
+    }
+    return collisionSide;
+}
+
+function collisionCheckCharEnemy(character, enemy) {
+    // get the vectors to check against
+    let vX = (character.x + (character.w * .5)) - (enemy.dx + (enemy.dWidth / 2)),
+        vY = (character.y + (character.h * .5)) - (enemy.dy + (enemy.dHeight / 2)),
+
+        // add the half widths and half heights of the objects
+        hWidths = (character.w * .4) + (enemy.dWidth / 2),
+        hHeights = (character.h * .4) + (enemy.dHeight / 2),
 
         collisionSide = null;
     // if the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision
@@ -320,7 +407,7 @@ let dinoStages = {
 
 let enemyStages = {
     walkRight: { s: 0, w: 375.291666666666667, num: 24 },
-    walkLeft: { s: 9007, w: 375.291666666666667, num: 24 }
+    walkLeft: { s: 9007, w: 375.291666666666667, num: 23 }
 }
 
 let action = 'idleRight'
@@ -368,7 +455,6 @@ dinoImg.onload = animate;
 function drawEnemy() {
     ctx.drawImage(enemyImg, xEnemy, 0, 375.291666666666667, enemyImg.height, enemy.dx, enemy.dy, enemy.dWidth, enemy.dHeight);
 }
-enemyImg.onload = animate;
 
 setInterval(function () {
     x += dinoStages[action].w
@@ -395,6 +481,15 @@ setInterval(function () {
 }, 65)
 
 
+setInterval(function () {
+    xEnemy += enemyStages[actionEnemy].w
+    if (xEnemy >= (enemyStages[actionEnemy].w * enemyStages[actionEnemy].num) + enemyStages[actionEnemy].s) {
+        xEnemy = enemyStages[actionEnemy].s
+    }
+    changeActionEnemy('walkRight')
+}, 65)
+
+
 
 ctx.font = "50px Arial"
 function animate() {
@@ -406,7 +501,6 @@ function animate() {
     update()
     drawEnemy()
     syrupSmall()
-    console.log(enemy)
     ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 100, 60)
 }
 
