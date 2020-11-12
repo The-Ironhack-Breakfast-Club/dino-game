@@ -45,8 +45,6 @@ class Background {
 
 let scrollingBackground = new Background();
 
-let bg = { x: 0, y: 0, w: width, h: height }
-
 let dino = {
     x: 0,
     y: 0,
@@ -114,12 +112,6 @@ tiles.push(bottomBoundary)
 
 let leftBoundary = new Terrain(0, 5, 0, 5, height, 5, 0, 5, height)
 tiles.push(leftBoundary)
-
-// let platform1 = new Terrain (0, 650, height - 400, 200, 200)
-// tiles.push(platform1)
-
-// let platform2 = new Terrain (0, 300, height - 200, 200 ,100)
-// tiles.push(platform2)
 
 function update() {
     // check keys
@@ -192,7 +184,6 @@ function update() {
         } else if (dino.x >= width * .5 && dino.running == true) {
             ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx -= 8, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
         }
-
         let side = collisionCheck(dino, tiles[i]);
         if (side === "l" || side === "r") {
             dino.velX = 0;
@@ -204,7 +195,6 @@ function update() {
             dino.velY *= -1;
         }
     }
-
     if (dino.grounded) {
         dino.velY = 0;
         gravity = 0;
@@ -297,8 +287,6 @@ function syrupSmall() {
 // }, 100)
 
 function drawDino() {
-    // ctx.fillStyle = "blue"
-    // ctx.fillRect(dino.x, dino.y, dino.w, dino.h)
     ctx.drawImage(dinoImg, x, 0, 430, dinoImg.height, dino.x, dino.y, dino.w, dino.h)
 }
 dinoImg.onload = animate;
@@ -342,12 +330,9 @@ function animate() {
     ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 100, 60)
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////// LEVEL ONEEEEEEEE FUNCTIONS -- FIGHT! (DIABETES) ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 function floor() {
     for (i = 0; i < 200; i++) {
@@ -400,8 +385,22 @@ function enemy() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////BUILD LEVEL 1//////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-floatingPlatform(tileSprite, 4, 2.2, 2)
-floatingPlatform(tileSprite, 20, 2.7, 4)
-floatingPlatform(tileSprite, 23, 4, 5)
-platform(tileSprite, 3, 14, 2)
+floatingPlatform(tileSprite, 6, 2.8, 3)
+floatingPlatform(tileSprite, 10, 4.5, 2)
+floatingPlatform(tileSprite, 14, 4, 2)
+platform(tileSprite, 15, 7, 2)
+floatingPlatform(tileSprite, 25, 5, 2) // 5
+floatingPlatform(tileSprite, 28, 3.5, 2)
+floatingPlatform(tileSprite, 32, 3.5, 2)
+platform(tileSprite, 33, 10, 1)
+floatingPlatform(tileSprite, 46, 2.8, 5)
+floatingPlatform(tileSprite, 52, 3.8, 3) //10
+platform(tileSprite, 58, 5, 2)
+floatingPlatform(tileSprite, 57, 5, 2)
+floatingPlatform(tileSprite, 67, 3.5, 2)
+floatingPlatform(tileSprite, 72, 3.5, 2)
+platform(tileSprite, 78, 5, 1) // 15
+floatingPlatform(tileSprite, 80, 5.5, 5)
+floatingPlatform(tileSprite, 85, 3.8, 3)
+platform(tileSprite, 90, 5, 2)
 
