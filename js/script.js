@@ -248,30 +248,15 @@ function update() {
         gravity = 0;
     }
 
-    dino.x = Math.min(dino.velX + dino.x, width * .5);
-    dino.y += dino.velY;
-
     //In relation to enemy
-    for (let i = 2; i < tiles.length; i++) {
-        if (enemy.x < width * .5) {
-            ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
-        } else if (enemy.x >= width * .5) {
-            ctx.drawImage(tiles[i].img, tiles[i].sx, tiles[i].sy, tiles[i].sWidth, tiles[i].sHeight, tiles[i].dx, tiles[i].dy, tiles[i].dWidth, tiles[i].dHeight);
-        }
-        let side = collisionCheck(enemy, tiles[i]);
-        if (side === "l" || side === "r") {
-            enemy.velX = 0;
-            enemy.jumping = false;
-        } else if (side === "b") {
-            enemy.grounded = true;
-            enemy.jumping = false;
-        } else if (side === "t") {
-            enemy.velY *= -1;
-        }
-    }
     if (enemy.grounded) {
         enemy.velY = 0;
     }
+
+    dino.x = Math.min(dino.velX + dino.x, width * .5);
+    dino.y += dino.velY;
+
+
 
     enemy.x = Math.min(enemy.velX + enemy.x, width * .5);
     enemy.y += enemy.velY;
