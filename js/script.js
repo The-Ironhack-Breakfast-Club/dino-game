@@ -40,7 +40,7 @@ class Background {
             ctx.drawImage(bgImg, this.x -= 1, this.y)
             ctx.drawImage(bgImg, this.x + 1000, this.y)
             if (this.x <= -1000) {
-                this.x = 1000
+                this.x = 0
             }
         }
     }
