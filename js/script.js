@@ -248,10 +248,6 @@ function update() {
         gravity = 0;
     }
 
-    if (enemy.grounded) {
-        enemy.velY = 0;
-    }
-
     dino.x = Math.min(dino.velX + dino.x, width * .5);
     dino.y += dino.velY;
 
@@ -273,11 +269,6 @@ function update() {
             enemy.velY *= -1;
         }
     }
-    if (enemy.grounded) {
-        enemy.velY = 0;
-        gravity = 0;
-    }
-
     if (enemy.grounded) {
         enemy.velY = 0;
     }
