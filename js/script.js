@@ -81,7 +81,19 @@ class Objects {
             this.dWidth = dWidth,
             this.dHeight = dHeight
     }
+
+    render() {
+        for (let i = 0; i < 5; i++) {
+            ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth, syrup.dHeight)
+        }
+
+        // for (let i = 0; i < 5; i++) {
+        //     ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth * 1.1, syrup.dHeight * 1.1)
+        // }
+    }
 }
+
+let syrup = new Objects(objectSprite, 1483, 0, 365, 512, 6, 10, 365 / 8, 512 / 8)
 
 class Terrain {
     constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
@@ -112,8 +124,6 @@ tiles.push(leftBoundary)
 function update() {
     // check keys
     dino.idling = true;
-
-    console.log(gravity)
 
     if (keys[38] || keys[32]) {
         // up arrow or space
@@ -269,12 +279,30 @@ function changeAction(newAction) {
     }
 }
 
+function syrupSmall() {
+    for (let i = 0; i < 5; i++) {
+        ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth, syrup.dHeight)
+    }
+}
+
+// function syrupLarge() {
+//     for (let i = 0; i < 5; i++) {
+//         ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth * 1.1, syrup.dHeight * 1.1)
+//     }
+// }
+
+//SYRUP OF LIFE//
+// setInterval(function () {
+//     syrupLarge()
+// }, 100)
+
 function drawDino() {
     // ctx.fillStyle = "blue"
     // ctx.fillRect(dino.x, dino.y, dino.w, dino.h)
     ctx.drawImage(dinoImg, x, 0, 430, dinoImg.height, dino.x, dino.y, dino.w, dino.h)
 }
 dinoImg.onload = animate;
+
 
 setInterval(function () {
     x += stages[action].w
@@ -300,6 +328,8 @@ setInterval(function () {
     }
 }, 65)
 
+
+
 ctx.font = "50px Arial"
 function animate() {
     animationId = requestAnimationFrame(animate)
@@ -308,6 +338,7 @@ function animate() {
     scrollingBackground.render()
     drawDino()
     update()
+    syrupSmall()
     ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 100, 60)
 }
 
@@ -359,6 +390,10 @@ function platform(img, xLocation, width, height) {
         tiles.push(new Terrain(img, 128 * 1, 0, 128, 128, (xLocation + (i + 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
     }
     tiles.push(new Terrain(img, 128 * 2, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
+}
+
+function enemy() {
+
 }
 
 
