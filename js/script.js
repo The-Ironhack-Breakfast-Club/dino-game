@@ -12,6 +12,9 @@ bgImg.src = './images/BG/BG.png'
 const dinoImg = new Image()
 dinoImg.src = `./images/dino-sprites/dino-sprite.png`
 
+const enemyImg = new Image()
+enemyImg.src = `./images/meteor-enemy/walking-sprite.png`
+
 const tileSprite = new Image()
 tileSprite.src = `./images/Tiles/tile-sprites.png`
 
@@ -61,6 +64,8 @@ let dino = {
     rightFacing: true
 }
 
+
+
 let keys = [];
 let friction = 0.8;
 let gravity = 1.3;
@@ -90,6 +95,32 @@ class Objects {
         // }
     }
 }
+
+let enemies = [];
+
+class Enemy {
+    constructor(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+        this.img = img,
+            this.sx = sx,
+            this.sy = sy,
+            this.sWidth = sWidth,
+            this.sHeight = sHeight,
+            this.dx = dx,
+            this.dy = dy,
+            this.dWidth = dWidth,
+            this.dHeight = dHeight,
+            this.speed = 6,
+            this.velX = 0,
+            this.velY = 0,
+            this.grounded = false,
+            this.dying = false,
+            this.rightFacing = true
+    }
+}
+
+let enemy = new Enemy(enemyImg, 0, 0, 0, 0, 6, 100, 365 / 8, 512 / 8);
+
+console.log(enemy.img)
 
 let syrup = new Objects(objectSprite, 1483, 0, 365, 512, 6, 10, 365 / 8, 512 / 8)
 
@@ -157,6 +188,9 @@ function update() {
     dino.velX *= friction;
     dino.velY += gravity;
 
+    enemy.velX *= friction;
+    enemy.velY += gravity;
+
     dino.grounded = false;
 
     // LEFT AND BOTTOM BOUNDARIES
@@ -172,6 +206,20 @@ function update() {
             dino.jumping = false;
         } else if (side === "t") {
             dino.velY *= -1;
+        }
+    }
+
+    //In relation to enemy
+    for (let i = 0; i < 2; i++) {
+        ctx.fillRect(tiles[i].x, tiles[i].y, tiles[i].w, tiles[i].h);
+
+        let side = collisionCheck(enemy, tiles[i]);
+        if (side === "l" || side === "r") {
+            enemy.velX = 0;
+        } else if (side === "b") {
+            enemy.grounded = true;
+        } else if (side === "t") {
+            enemy.velY *= -1;
         }
     }
 
@@ -200,14 +248,25 @@ function update() {
         gravity = 0;
     }
 
+    //In relation to enemy
+    if (enemy.grounded) {
+        enemy.velY = 0;
+    }
+
     dino.x = Math.min(dino.velX + dino.x, width * .5);
     dino.y += dino.velY;
+
+
+
+    enemy.x = Math.min(enemy.velX + enemy.x, width * .5);
+    enemy.y += enemy.velY;
 }
 
 function collisionCheck(character, obstacle) {
     // get the vectors to check against
     let vX = (character.x + (character.w * .5)) - (obstacle.dx + (obstacle.dWidth / 2)),
         vY = (character.y + (character.h * .5)) - (obstacle.dy + (obstacle.dHeight / 2)),
+
         // add the half widths and half heights of the objects
         hWidths = (character.w * .4) + (obstacle.dWidth / 2),
         hHeights = (character.h * .4) + (obstacle.dHeight / 2),
@@ -248,7 +307,7 @@ document.body.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
 });
 
-let stages = {
+let dinoStages = {
     idleRight: { s: -30, w: 680, num: 10 },
     idleLeft: { s: 7080, w: 680, num: 10 },
     runRight: { s: 13620, w: 680, num: 8 },
@@ -259,13 +318,28 @@ let stages = {
     deadLeft: { s: 43520, w: 680, num: 8 },
 }
 
+let enemyStages = {
+    walkRight: { s: 0, w: 375.291666666666667, num: 24 },
+    walkLeft: { s: 9007, w: 375.291666666666667, num: 24 }
+}
+
 let action = 'idleRight'
-let x = stages[action].s
+let x = dinoStages[action].s
 
 function changeAction(newAction) {
     if (action != newAction) {
         action = newAction;
-        x = stages[action].s
+        x = dinoStages[action].s
+    }
+}
+
+
+let actionEnemy = 'walkRight'
+let xEnemy = enemyStages[actionEnemy].s
+function changeActionEnemy(newAction) {
+    if (actionEnemy != newAction) {
+        actionEnemy = newAction;
+        xEnemy = enemyStages[actionEnemy].s
     }
 }
 
@@ -291,11 +365,15 @@ function drawDino() {
 }
 dinoImg.onload = animate;
 
+function drawEnemy() {
+    ctx.drawImage(enemyImg, xEnemy, 0, 375.291666666666667, enemyImg.height, enemy.dx, enemy.dy, enemy.dWidth, enemy.dHeight);
+}
+enemyImg.onload = animate;
 
 setInterval(function () {
-    x += stages[action].w
-    if (x >= (stages[action].w * stages[action].num) + stages[action].s) {
-        x = stages[action].s
+    x += dinoStages[action].w
+    if (x >= (dinoStages[action].w * dinoStages[action].num) + dinoStages[action].s) {
+        x = dinoStages[action].s
     }
     if (dino.jumping && dino.rightFacing) {
         changeAction('jumpRight');
@@ -326,7 +404,9 @@ function animate() {
     scrollingBackground.render()
     drawDino()
     update()
+    drawEnemy()
     syrupSmall()
+    console.log(enemy)
     ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 100, 60)
 }
 
@@ -377,9 +457,9 @@ function platform(img, xLocation, width, height) {
     tiles.push(new Terrain(img, 128 * 2, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
 }
 
-function enemy() {
+// function enemy() {
 
-}
+// }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
