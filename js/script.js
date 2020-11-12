@@ -195,6 +195,7 @@ function update() {
     enemy.velY += gravity;
 
     dino.grounded = false;
+    enemy.grounded = false;
 
     // LEFT AND BOTTOM BOUNDARIES
     for (let i = 0; i < 2; i++) {
