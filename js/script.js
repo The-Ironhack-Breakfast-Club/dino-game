@@ -487,7 +487,6 @@ setInterval(function () {
     if (xEnemy >= (enemyStages[actionEnemy].w * enemyStages[actionEnemy].num) + enemyStages[actionEnemy].s) {
         xEnemy = enemyStages[actionEnemy].s
     }
-    changeActionEnemy('walkRight')
     if (!enemy.rightFacing) {
         changeActionEnemy('walkLeft')
     }
