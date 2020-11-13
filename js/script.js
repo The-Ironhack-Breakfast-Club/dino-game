@@ -202,7 +202,7 @@ function update() {
 
 
     dino.grounded = false;
-    console.log(enemies[1].grounded)
+
 
     // LEFT AND BOTTOM BOUNDARIES
     for (let i = 0; i < 2; i++) {
@@ -259,16 +259,22 @@ function update() {
         }
     }
 
-    
 
 
-    //character in relation to enemyStages[actionEnemy]
+
+    //character in relation to enemy
     for (enemy of enemies) {
         let sideChar = collisionCheckCharEnemy(dino, enemy);
         if (sideChar === "l" || sideChar === "r") {
             dino.dying = true;
         } else if (sideChar === "b") {
             enemies.splice(enemies.indexOf(enemy), 1)
+            gravity = 1.3
+            dino.jumping = true;
+            dino.grounded = false;
+            dino.idling = false;
+            dino.velY = -dino.speed * 2;
+            dino.running = false;
         } else if (sideChar === "t") {
             dino.dying = true;
         }
@@ -518,12 +524,11 @@ setInterval(function () {
 
 
 function rockArmy() {
-    for (i = 0; i < 10; i++) {
-        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 500 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
+    for (i = 1; i < 100; i++) {
+        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 100 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
     }
 }
 rockArmy()
-
 
 
 ctx.font = "50px Arial"
