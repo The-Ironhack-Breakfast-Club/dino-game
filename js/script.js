@@ -19,7 +19,7 @@ const tileSprite = new Image()
 tileSprite.src = `./images/Tiles/tile-sprites.png`
 
 const objectSprite = new Image()
-objectSprite.src = `../images/Object/object-sprites.png`
+objectSprite.src = `./images/Object/object-sprites.png`
 
 class Background {
     constructor(x, y, w, h) {
