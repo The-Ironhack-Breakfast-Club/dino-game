@@ -257,6 +257,35 @@ function update() {
                 enemy.grounded = true;
             }
         }
+
+        if (dino.dying == true) {
+            scrollingBackground.x = 0;
+            ctx.clearRect(0, 0, width, height)
+            dino.dying = false;
+
+            tiles = []
+            enemies = []
+            tiles.push(leftBoundary)
+            tiles.push(bottomBoundary)
+            floor()
+            levelOne();
+            rockArmy();
+            dino.x = 0;
+            dino.y = 0;
+            dino.w = 100;
+            dino.h = 100;
+            dino.speed = 6;
+            dino.velX = 0;
+            dino.velY = 0;
+            dino.jumping = false;
+            dino.grounded = false;
+            dino.idling = true;
+            dino.running = false;
+            dino.dying = false;
+            dino.rightFacing = true;
+            syrups -= 1;
+
+        }
     }
 
 
@@ -455,8 +484,9 @@ function changeActionEnemy(newAction) {
     }
 }
 
+syrups = 5;
 function syrupSmall() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < syrups; i++) {
         ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth, syrup.dHeight)
     }
 }
@@ -595,22 +625,24 @@ function platform(img, xLocation, width, height) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////BUILD LEVEL 1//////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-floatingPlatform(tileSprite, 6, 2.8, 3)
-floatingPlatform(tileSprite, 10, 4.5, 2)
-floatingPlatform(tileSprite, 14, 4, 2)
-platform(tileSprite, 15, 7, 2)
-floatingPlatform(tileSprite, 25, 5, 2) // 5
-floatingPlatform(tileSprite, 28, 3.5, 2)
-floatingPlatform(tileSprite, 32, 3.5, 2)
-platform(tileSprite, 33, 10, 1)
-floatingPlatform(tileSprite, 46, 2.8, 5)
-floatingPlatform(tileSprite, 52, 3.8, 3) //10
-platform(tileSprite, 58, 5, 2)
-floatingPlatform(tileSprite, 57, 5, 2)
-floatingPlatform(tileSprite, 67, 3.5, 2)
-floatingPlatform(tileSprite, 72, 3.5, 2)
-platform(tileSprite, 78, 5, 1) // 15
-floatingPlatform(tileSprite, 80, 5.5, 5)
-floatingPlatform(tileSprite, 85, 3.8, 3)
-platform(tileSprite, 90, 5, 2)
-
+function levelOne() {
+    floatingPlatform(tileSprite, 6, 2.8, 3)
+    floatingPlatform(tileSprite, 10, 4.5, 2)
+    floatingPlatform(tileSprite, 14, 4, 2)
+    platform(tileSprite, 15, 7, 2)
+    floatingPlatform(tileSprite, 25, 5, 2) // 5
+    floatingPlatform(tileSprite, 28, 3.5, 2)
+    floatingPlatform(tileSprite, 32, 3.5, 2)
+    platform(tileSprite, 33, 10, 1)
+    floatingPlatform(tileSprite, 46, 2.8, 5)
+    floatingPlatform(tileSprite, 52, 3.8, 3) //10
+    platform(tileSprite, 58, 5, 2)
+    floatingPlatform(tileSprite, 57, 5, 2)
+    floatingPlatform(tileSprite, 67, 3.5, 2)
+    floatingPlatform(tileSprite, 72, 3.5, 2)
+    platform(tileSprite, 78, 5, 1) // 15
+    floatingPlatform(tileSprite, 80, 5.5, 5)
+    floatingPlatform(tileSprite, 85, 3.8, 3)
+    platform(tileSprite, 90, 5, 2)
+}
+levelOne()
