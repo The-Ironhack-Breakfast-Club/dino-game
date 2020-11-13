@@ -146,7 +146,6 @@ let leftBoundary = new Terrain(0, 5, 0, 5, height, 5, 0, 5, height)
 tiles.push(leftBoundary)
 
 function update() {
-
     // check keys
     dino.idling = true;
 
@@ -202,9 +201,8 @@ function update() {
     }
 
 
-
     dino.grounded = false;
-
+    console.log(enemies[1].grounded)
 
     // LEFT AND BOTTOM BOUNDARIES
     for (let i = 0; i < 2; i++) {
@@ -257,11 +255,11 @@ function update() {
                 enemy.rightFacing = false;
             } else if (sideEnemy === "b") {
                 enemy.grounded = true;
-            } else if (sideEnemy === "t") {
-                enemy.velY *= -1;
             }
         }
     }
+
+    
 
 
     //character in relation to enemyStages[actionEnemy]
@@ -270,7 +268,7 @@ function update() {
         if (sideChar === "l" || sideChar === "r") {
             dino.dying = true;
         } else if (sideChar === "b") {
-            enemy.dying = true;
+            enemies.splice(enemies.indexOf(enemy), 1)
         } else if (sideChar === "t") {
             dino.dying = true;
         }
@@ -515,6 +513,9 @@ setInterval(function () {
         }
     }
 }, 65)
+
+
+
 
 function rockArmy() {
     for (i = 0; i < 10; i++) {
