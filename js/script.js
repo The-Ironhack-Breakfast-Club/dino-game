@@ -240,11 +240,11 @@ function update() {
 
     //Enemy in relation to obstacles
     for (let i = 2; i < tiles.length; i++) {
-        ctx.fillRect(tiles[i].x, tiles[i].y, tiles[i].w, tiles[i].h);
-
         let sideEnemy = collisionCheckEnemyObs(enemy, tiles[i]);
-        if (sideEnemy === "l" || sideEnemy === "r") {
+        if (sideEnemy === "l") {
             enemy.rightFacing = true;
+        } else if (sideEnemy === "r") {
+            enemy.rightFacing = false;
         } else if (sideEnemy === "b") {
             enemy.grounded = true;
         } else if (sideEnemy === "t") {
@@ -261,7 +261,7 @@ function update() {
     } else if (sideChar === "t") {
         dino.dying = true;
     }
-    console.log(dino.dying, enemy.dying)
+
     if (enemy.grounded) {
         enemy.velY = 0;
     }
@@ -488,6 +488,9 @@ setInterval(function () {
         xEnemy = enemyStages[actionEnemy].s
     }
     changeActionEnemy('walkRight')
+    if (!enemy.rightFacing) {
+        changeActionEnemy('walkLeft')
+    }
 }, 65)
 
 
