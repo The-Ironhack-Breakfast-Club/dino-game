@@ -118,7 +118,7 @@ class Enemy {
             this.dying = dying,
             this.rightFacing = rightFacing,
             this.actionEnemy = 'walkRight'
-            this.xEnemy = 0
+        this.xEnemy = 0
     }
 }
 
@@ -254,7 +254,6 @@ function update() {
             if (sideEnemy === "l") {
                 enemy.rightFacing = true;
             } else if (sideEnemy === "r") {
-                console.log('hey!')
                 enemy.rightFacing = false;
             } else if (sideEnemy === "b") {
                 enemy.grounded = true;
@@ -552,16 +551,15 @@ setInterval(function () {
             enemy.xEnemy = enemyStages[enemy.actionEnemy].s
         }
         if (!enemy.rightFacing) {
-            console.log('hello whatever')
             enemy.actionEnemy = 'walkLeft'
             // let actionEnemy = 'walkLeft'
             // let xEnemy = enemyStages[actionEnemy].s
-        // function changeActionEnemy(newAction) {
+            // function changeActionEnemy(newAction) {
             // if (actionEnemy != newAction) {
             //     actionEnemy = newAction;
-                // xEnemy = enemyStages[actionEnemy].s
+            // xEnemy = enemyStages[actionEnemy].s
             // }
-        // }
+            // }
             // changeActionEnemy('walkLeft')
         }
     }
