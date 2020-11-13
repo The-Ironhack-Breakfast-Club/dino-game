@@ -485,9 +485,13 @@ function changeActionEnemy(newAction) {
 }
 
 syrups = 5;
+pulse = .03
+setInterval(function() {
+    pulse *= -1
+}, 500)
 function syrupSmall() {
     for (let i = 0; i < syrups; i++) {
-        ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth, syrup.dHeight)
+        ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth += pulse, syrup.dHeight += pulse)
     }
 }
 
