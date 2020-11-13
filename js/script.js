@@ -552,15 +552,8 @@ setInterval(function () {
         }
         if (!enemy.rightFacing) {
             enemy.actionEnemy = 'walkLeft'
-            // let actionEnemy = 'walkLeft'
-            // let xEnemy = enemyStages[actionEnemy].s
-            // function changeActionEnemy(newAction) {
-            // if (actionEnemy != newAction) {
-            //     actionEnemy = newAction;
-            // xEnemy = enemyStages[actionEnemy].s
-            // }
-            // }
-            // changeActionEnemy('walkLeft')
+        } else if (enemy.rightFacing) {
+            enemy.actionEnemy = 'walkRight'
         }
     }
 }, 65)
@@ -569,8 +562,8 @@ setInterval(function () {
 
 
 function rockArmy() {
-    for (i = 1; i < 3; i++) {
-        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 150 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
+    for (i = 1; i < 1000; i++) {
+        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 50 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
     }
 }
 rockArmy()
