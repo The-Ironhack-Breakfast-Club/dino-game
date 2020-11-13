@@ -116,7 +116,9 @@ class Enemy {
             this.idling = idling,
             this.walking = walking,
             this.dying = dying,
-            this.rightFacing = rightFacing
+            this.rightFacing = rightFacing,
+            this.actionEnemy = 'walkRight'
+            this.xEnemy = 0
     }
 }
 
@@ -249,10 +251,10 @@ function update() {
     for (enemy of enemies) {
         for (let i = 2; i < tiles.length; i++) {
             let sideEnemy = collisionCheckEnemyObs(enemy, tiles[i]);
-            console.log(sideEnemy);
             if (sideEnemy === "l") {
                 enemy.rightFacing = true;
             } else if (sideEnemy === "r") {
+                console.log('hey!')
                 enemy.rightFacing = false;
             } else if (sideEnemy === "b") {
                 enemy.grounded = true;
@@ -476,14 +478,14 @@ function changeAction(newAction) {
 }
 
 
-let actionEnemy = 'walkRight'
-let xEnemy = enemyStages[actionEnemy].s
-function changeActionEnemy(newAction) {
-    if (actionEnemy != newAction) {
-        actionEnemy = newAction;
-        xEnemy = enemyStages[actionEnemy].s
-    }
-}
+// let actionEnemy = 'walkLeft'
+// let xEnemy = enemyStages[actionEnemy].s
+// function changeActionEnemy(newAction) {
+//     if (actionEnemy != newAction) {
+//         actionEnemy = newAction;
+//         xEnemy = enemyStages[actionEnemy].s
+//     }
+// }
 
 syrups = 5;
 pulse = .03
@@ -514,7 +516,7 @@ dinoImg.onload = animate;
 
 function drawEnemy() {
     for (enemy of enemies) {
-        ctx.drawImage(enemyImg, xEnemy, 0, 375.291666666666667, enemyImg.height, enemy.dx, enemy.dy, enemy.dWidth, enemy.dHeight);
+        ctx.drawImage(enemyImg, enemy.xEnemy, 0, 375.291666666666667, enemyImg.height, enemy.dx, enemy.dy, enemy.dWidth, enemy.dHeight);
     }
 }
 
@@ -544,13 +546,23 @@ setInterval(function () {
 
 
 setInterval(function () {
-    xEnemy += enemyStages[actionEnemy].w
-    if (xEnemy >= (enemyStages[actionEnemy].w * enemyStages[actionEnemy].num) + enemyStages[actionEnemy].s) {
-        xEnemy = enemyStages[actionEnemy].s
-    }
     for (enemy of enemies) {
+        enemy.xEnemy += enemyStages[enemy.actionEnemy].w
+        if (enemy.xEnemy >= (enemyStages[enemy.actionEnemy].w * enemyStages[enemy.actionEnemy].num) + enemyStages[enemy.actionEnemy].s) {
+            enemy.xEnemy = enemyStages[enemy.actionEnemy].s
+        }
         if (!enemy.rightFacing) {
-            changeActionEnemy('walkLeft')
+            console.log('hello whatever')
+            enemy.actionEnemy = 'walkLeft'
+            // let actionEnemy = 'walkLeft'
+            // let xEnemy = enemyStages[actionEnemy].s
+        // function changeActionEnemy(newAction) {
+            // if (actionEnemy != newAction) {
+            //     actionEnemy = newAction;
+                // xEnemy = enemyStages[actionEnemy].s
+            // }
+        // }
+            // changeActionEnemy('walkLeft')
         }
     }
 }, 65)
