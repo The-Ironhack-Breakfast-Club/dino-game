@@ -242,13 +242,14 @@ function update() {
     }
     if (dino.grounded) {
         dino.velY = 0;
-        gravity = 0;
+        // gravity = 0;
     }
 
     //Enemy in relation to obstacles
     for (enemy of enemies) {
         for (let i = 2; i < tiles.length; i++) {
             let sideEnemy = collisionCheckEnemyObs(enemy, tiles[i]);
+            console.log(sideEnemy);
             if (sideEnemy === "l") {
                 enemy.rightFacing = true;
             } else if (sideEnemy === "r") {
@@ -486,7 +487,7 @@ function changeActionEnemy(newAction) {
 
 syrups = 5;
 pulse = .03
-setInterval(function() {
+setInterval(function () {
     pulse *= -1
 }, 500)
 function syrupSmall() {
@@ -558,8 +559,8 @@ setInterval(function () {
 
 
 function rockArmy() {
-    for (i = 1; i < 100; i++) {
-        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 100 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
+    for (i = 1; i < 3; i++) {
+        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 150 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
     }
 }
 rockArmy()
