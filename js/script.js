@@ -19,7 +19,7 @@ const tileSprite = new Image()
 tileSprite.src = `./images/Tiles/tile-sprites.png`
 
 const objectSprite = new Image()
-objectSprite.src = `../images/Object/object-sprites.png`
+objectSprite.src = `./images/Object/object-sprites.png`
 
 class Background {
     constructor(x, y, w, h) {
@@ -562,8 +562,8 @@ setInterval(function () {
 
 
 function rockArmy() {
-    for (i = 1; i < 1000; i++) {
-        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 50 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
+    for (i = 1; i < 45; i++) {
+        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 110 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
     }
 }
 rockArmy()
