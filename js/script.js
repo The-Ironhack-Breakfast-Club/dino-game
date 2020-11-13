@@ -120,7 +120,8 @@ class Enemy {
     }
 }
 
-let enemy = new Enemy(enemyImg, 0, 0, 0, 0, 500, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true);
+
+// let enemy1 = new Enemy(enemyImg, 0, 0, 0, 0, 500, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true);
 
 let syrup = new Objects(objectSprite, 1483, 0, 365, 512, 6, 10, 365 / 8, 512 / 8)
 
@@ -145,6 +146,7 @@ let leftBoundary = new Terrain(0, 5, 0, 5, height, 5, 0, 5, height)
 tiles.push(leftBoundary)
 
 function update() {
+
     // check keys
     dino.idling = true;
 
@@ -170,7 +172,9 @@ function update() {
             }
         }
         if (dino.x == 500) {
-            enemy.dx -= 8;
+            for (enemy of enemies) {
+                enemy.dx -= 8;
+            }
         }
         dino.rightFacing = true;
         dino.idling = false;
@@ -191,11 +195,16 @@ function update() {
     dino.velX *= friction;
     dino.velY += gravity;
 
-    enemy.velX *= friction;
-    enemy.velY += gravity;
+    for (enemy of enemies) {
+        enemy.velX *= friction;
+        enemy.velY += gravity;
+        enemy.grounded = false;
+    }
+
+
 
     dino.grounded = false;
-    enemy.grounded = false;
+
 
     // LEFT AND BOTTOM BOUNDARIES
     for (let i = 0; i < 2; i++) {
@@ -239,43 +248,54 @@ function update() {
     }
 
     //Enemy in relation to obstacles
-    for (let i = 2; i < tiles.length; i++) {
-        let sideEnemy = collisionCheckEnemyObs(enemy, tiles[i]);
-        if (sideEnemy === "l") {
-            enemy.rightFacing = true;
-        } else if (sideEnemy === "r") {
-            enemy.rightFacing = false;
-        } else if (sideEnemy === "b") {
-            enemy.grounded = true;
-        } else if (sideEnemy === "t") {
-            enemy.velY *= -1;
+    for (enemy of enemies) {
+        for (let i = 2; i < tiles.length; i++) {
+            let sideEnemy = collisionCheckEnemyObs(enemy, tiles[i]);
+            if (sideEnemy === "l") {
+                enemy.rightFacing = true;
+            } else if (sideEnemy === "r") {
+                enemy.rightFacing = false;
+            } else if (sideEnemy === "b") {
+                enemy.grounded = true;
+            } else if (sideEnemy === "t") {
+                enemy.velY *= -1;
+            }
         }
     }
 
+
     //character in relation to enemyStages[actionEnemy]
-    let sideChar = collisionCheckCharEnemy(dino, enemy);
-    if (sideChar === "l" || sideChar === "r") {
-        dino.dying = true;
-    } else if (sideChar === "b") {
-        enemy.dying = true;
-    } else if (sideChar === "t") {
-        dino.dying = true;
+    for (enemy of enemies) {
+        let sideChar = collisionCheckCharEnemy(dino, enemy);
+        if (sideChar === "l" || sideChar === "r") {
+            dino.dying = true;
+        } else if (sideChar === "b") {
+            enemy.dying = true;
+        } else if (sideChar === "t") {
+            dino.dying = true;
+        }
+
+        if (enemy.grounded) {
+            enemy.velY = 0;
+        }
     }
 
-    if (enemy.grounded) {
-        enemy.velY = 0;
-    }
+
 
     dino.x = Math.min(dino.velX + dino.x, width * .5);
     dino.y += dino.velY;
 
-    if (enemy.walking == true && enemy.rightFacing == true) {
-        enemy.dx += 2;
-    } else if (enemy.walking == true && enemy.rightFacing != true) {
-        enemy.dx -= 2;
+    for (enemy of enemies) {
+        if (enemy.walking == true && enemy.rightFacing == true) {
+            enemy.dx += 2;
+        } else if (enemy.walking == true && enemy.rightFacing != true) {
+            enemy.dx -= 2;
+        }
+
+        enemy.dy += enemy.velY;
     }
 
-    enemy.dy += enemy.velY;
+
 }
 
 function collisionCheckCharObs(character, obstacle) {
@@ -454,7 +474,9 @@ function drawDino() {
 dinoImg.onload = animate;
 
 function drawEnemy() {
-    ctx.drawImage(enemyImg, xEnemy, 0, 375.291666666666667, enemyImg.height, enemy.dx, enemy.dy, enemy.dWidth, enemy.dHeight);
+    for (enemy of enemies) {
+        ctx.drawImage(enemyImg, xEnemy, 0, 375.291666666666667, enemyImg.height, enemy.dx, enemy.dy, enemy.dWidth, enemy.dHeight);
+    }
 }
 
 setInterval(function () {
@@ -487,10 +509,19 @@ setInterval(function () {
     if (xEnemy >= (enemyStages[actionEnemy].w * enemyStages[actionEnemy].num) + enemyStages[actionEnemy].s) {
         xEnemy = enemyStages[actionEnemy].s
     }
-    if (!enemy.rightFacing) {
-        changeActionEnemy('walkLeft')
+    for (enemy of enemies) {
+        if (!enemy.rightFacing) {
+            changeActionEnemy('walkLeft')
+        }
     }
 }, 65)
+
+function rockArmy() {
+    for (i = 0; i < 10; i++) {
+        enemies.push(new Enemy(enemyImg, 0, 0, 0, 0, 500 * i, 100, 365 / 8, 512 / 8, 6, 0, 0, false, false, true, false, true))
+    }
+}
+rockArmy()
 
 
 
@@ -553,10 +584,6 @@ function platform(img, xLocation, width, height) {
     }
     tiles.push(new Terrain(img, 128 * 2, 0, 128, 128, (xLocation + (width - 1)) * 128, canvas.height - 128 * (height + 1), 138, 128))
 }
-
-// function enemy() {
-
-// }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
