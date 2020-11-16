@@ -89,10 +89,6 @@ class Objects {
         for (let i = 0; i < 5; i++) {
             ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth, syrup.dHeight)
         }
-
-        // for (let i = 0; i < 5; i++) {
-        //     ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth * 1.1, syrup.dHeight * 1.1)
-        // }
     }
 }
 
@@ -476,18 +472,30 @@ function changeAction(newAction) {
     }
 }
 
-
-// let actionEnemy = 'walkLeft'
-// let xEnemy = enemyStages[actionEnemy].s
-// function changeActionEnemy(newAction) {
-//     if (actionEnemy != newAction) {
-//         actionEnemy = newAction;
-//         xEnemy = enemyStages[actionEnemy].s
-//     }
-// }
-
 syrups = 5;
 pulse = .03
+////////////////////////////////ALEX GAME OVER MODULE////////////////////////////
+// SELECT THE GAME OVER SCREEN
+let divy = document.querySelector('.game-over');
+// SELECT HIGH SCORE NUMBER
+let score = document.querySelector('.score');
+// let gameScore = Math.abs(Math.floor(tiles[2].dx / 128))
+// TURN GAME OVER SCREEN FUNCTION
+function gameOver() {
+    if (syrups == 0) {
+        divy.classList.remove("hidden");
+        canvas.classList.add("hidden");
+        score.textContent = 10;
+
+    }
+}
+// START NEW GAME AND TURN OFF GAME OVER SCREEN
+function newGame() {
+    divy.classList.add('hidden');
+}
+////////////////////////////////ALEX GAME OVER MODULE////////////////////////////
+
+
 setInterval(function () {
     pulse *= -1
 }, 500)
@@ -496,17 +504,6 @@ function syrupSmall() {
         ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth += pulse, syrup.dHeight += pulse)
     }
 }
-
-// function syrupLarge() {
-//     for (let i = 0; i < 5; i++) {
-//         ctx.drawImage(syrup.img, syrup.sx, syrup.sy, syrup.sWidth, syrup.sHeight, syrup.dx + (40 * i), syrup.dy, syrup.dWidth * 1.1, syrup.dHeight * 1.1)
-//     }
-// }
-
-//SYRUP OF LIFE//
-// setInterval(function () {
-//     syrupLarge()
-// }, 100)
 
 function drawDino() {
     ctx.drawImage(dinoImg, x, 0, 430, dinoImg.height, dino.x, dino.y, dino.w, dino.h)
@@ -569,17 +566,17 @@ function rockArmy() {
 rockArmy()
 
 
-ctx.font = "50px Arial"
+ctx.font = "100px VT323"
 function animate() {
     animationId = requestAnimationFrame(animate)
     ctx.clearRect(0, 0, width, height);
-    // ctx.drawImage(bgImg, bg.x, bg.y, bg.w, bg.h)
     scrollingBackground.render()
     drawDino()
     update()
     drawEnemy()
     syrupSmall()
-    ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 100, 60)
+    gameOver()
+    ctx.fillText(Math.abs(Math.floor(tiles[2].dx / 128)), canvas.width - 150, 100)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -642,15 +639,41 @@ function levelOne() {
     floatingPlatform(tileSprite, 28, 3.5, 2)
     floatingPlatform(tileSprite, 32, 3.5, 2)
     platform(tileSprite, 33, 10, 1)
+    floatingPlatform(tileSprite, 39, 4, 3)
     floatingPlatform(tileSprite, 46, 2.8, 5)
-    floatingPlatform(tileSprite, 52, 3.8, 3) //10
+    floatingPlatform(tileSprite, 52, 3.8, 3) //10 
     platform(tileSprite, 58, 5, 2)
     floatingPlatform(tileSprite, 57, 5, 2)
     floatingPlatform(tileSprite, 67, 3.5, 2)
-    floatingPlatform(tileSprite, 72, 3.5, 2)
-    platform(tileSprite, 78, 5, 1) // 15
-    floatingPlatform(tileSprite, 80, 5.5, 5)
-    floatingPlatform(tileSprite, 85, 3.8, 3)
+    floatingPlatform(tileSprite, 71, 3.5, 2)
+    floatingPlatform(tileSprite, 75, 4, 2)
+    platform(tileSprite, 74, 5, 1) // 15
+    floatingPlatform(tileSprite, 82, 3.5, 5)
+    floatingPlatform(tileSprite, 89, 4, 2)
     platform(tileSprite, 90, 5, 2)
+    floatingPlatform(tileSprite, 97, 5, 3)
+    floatingPlatform(tileSprite, 102, 5.5, 3)
+    floatingPlatform(tileSprite, 107, 2.8, 3)
+    floatingPlatform(tileSprite, 111, 4.5, 2)
+    floatingPlatform(tileSprite, 115, 4, 2)
+    platform(tileSprite, 117, 7, 2)
+    floatingPlatform(tileSprite, 124, 5, 2) // 5
+    floatingPlatform(tileSprite, 127, 3.5, 2)
+    floatingPlatform(tileSprite, 132, 3.5, 2)
+    platform(tileSprite, 133, 10, 1)
+    floatingPlatform(tileSprite, 139, 4, 3)
+    floatingPlatform(tileSprite, 146, 2.8, 5)
+    floatingPlatform(tileSprite, 152, 3.8, 3) //10 aaaaaa
+    platform(tileSprite, 157, 5, 2)
+    floatingPlatform(tileSprite, 157, 5, 2)
+    floatingPlatform(tileSprite, 167, 3.5, 2)
+    floatingPlatform(tileSprite, 171, 3.5, 2)
+    floatingPlatform(tileSprite, 175, 4, 2)
+    platform(tileSprite, 174, 5, 1) // 15
+    floatingPlatform(tileSprite, 182, 3.5, 5)
+    floatingPlatform(tileSprite, 189, 4, 2)
+    platform(tileSprite, 190, 5, 2)
+    floatingPlatform(tileSprite, 197, 5, 3)
+    floatingPlatform(tileSprite, 1102, 5.5, 3)
 }
 levelOne()

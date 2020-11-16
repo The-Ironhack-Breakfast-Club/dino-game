@@ -1,0 +1,63 @@
+
+  html, body{
+    padding: 0;
+    margin: 0;
+}
+  .game-over {
+    background-image: url(/images/BG/BG.png);
+  }
+  .hidden {
+    display: none;
+  }
+  h1 {
+    font-family: "VT323";
+    font-size: 8em;
+    text-align: center;
+    animation-name: example;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  }
+  h4{
+    font-family: "VT323";
+    font-size: 5rem;
+    text-align: center;
+    animation-name: example;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  } 
+  @keyframes example {
+    0% {
+      color: black;
+      text-shadow: 0 0 20px rgb(11, 87, 11);
+    }
+    25% {
+      color: black;
+      text-shadow: 2px 2px 2px rgb(20, 197, 25);
+      transform: translate(-2px, 1px);
+    }
+    40% {
+      color: black;
+      text-shadow: none;
+      transform: translate(0, 0);
+    }
+    50% {
+      color: darkgrey;
+      text-shadow: 5px 5px 2px rgb(22, 162, 96), -5px -5px 2px rgb(23, 201, 154);
+      transform: translate(0px, 5px);
+    }
+    70% {
+      color: black;
+      text-shadow: none;
+      transform: translate(0, 0);
+    }
+    80% {
+      color: black;
+      text-shadow: 0 0 20px rgb(2, 103, 143);
+      transform: translate(-2px, 1px);
+    }
+    100% {
+      color: black;
+      text-shadow: none;
+    }
+  }
+  
